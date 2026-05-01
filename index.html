@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es" data-theme="warm">
 <head>
   <meta charset="UTF-8">
@@ -8,7 +8,7 @@
     :root {
       --bg:       #1a0f07;
       --bg2:      #241508;
-      --bg3:      #2e1a0a;
+      --bg3:      #2e1aa0a;
       --hover:    #3a2010;
       --border:   #5a3520;
       --t1:       #f5d87a;
@@ -149,30 +149,30 @@
 <body>
 
 <div id="boot">
-  <div id="boot-ico">ðŸ“–</div>
+  <div id="boot-ico">📖</div>
   <div id="boot-ttl">Biblia de Estudio</div>
-  <div id="boot-msg">Cargandoâ€¦</div>
+  <div id="boot-msg">Cargando…</div>
   <div class="bar-wrap"><div id="bar"></div></div>
 </div>
 
 <div id="am">
   <div id="am-box">
-    <h2>âš¡ Activar IA (Claude)</h2>
-    <p>La IA potencia el anÃ¡lisis morfolÃ³gico hebreo/griego, los comentarios de Calvino, Henry y Spurgeon, y las referencias cruzadas. Sin clave funciona la lectura y la bÃºsqueda.</p>
-    <input type="password" id="am-inp" placeholder="sk-ant-api03-â€¦" />
+    <h2>⚡ Activar IA (Claude)</h2>
+    <p>La IA potencia el análisis morfológico hebreo/griego, los comentarios de Calvino, Henry y Spurgeon, y las referencias cruzadas. Sin clave funciona la lectura y la búsqueda.</p>
+    <input type="password" id="am-inp" placeholder="sk-ant-api03-…" />
     <div>
       <button class="btn" onclick="saveKey()">Guardar y activar</button>
       <button class="btn2" onclick="closeAM()">Continuar sin IA</button>
     </div>
-    <div class="am-note">ObtÃ©n tu clave en <strong>console.anthropic.com</strong>. Se guarda solo en este navegador (localStorage).</div>
+    <div class="am-note">Obtén tu clave en <strong>console.anthropic.com</strong>. Se guarda solo en este navegador (localStorage).</div>
   </div>
 </div>
 
 <div id="sm" onclick="if(event.target===this)closeSM()">
   <div id="sm-box">
     <div id="sm-row">
-      <div id="sm-ico">ðŸ”</div>
-      <input type="text" id="sm-inp" placeholder="Buscar en toda la Bibliaâ€¦" oninput="debounceSrch(this.value)" />
+      <div id="sm-ico">🔍</div>
+      <input type="text" id="sm-inp" placeholder="Buscar en toda la Biblia…" oninput="debounceSrch(this.value)" />
       <div id="sm-esc">ESC</div>
     </div>
     <div id="sm-res"></div>
@@ -181,68 +181,68 @@
 </div>
 
 <div id="hdr">
-  <div id="hdr-logo">âœ</div>
+  <div id="hdr-logo">✝</div>
   <div id="hdr-title">Biblia <span>RVR1960</span></div>
   <div style="display:flex;gap:6px;align-items:center">
-    <div class="hbtn" onclick="openSM()" style="width:auto;padding:0 11px;gap:6px;font-size:.8rem;color:var(--t3)"><span>ðŸ”</span><span style="font-size:.78rem">Ctrl K</span></div>
+    <div class="hbtn" onclick="openSM()" style="width:auto;padding:0 11px;gap:6px;font-size:.8rem;color:var(--t3)"><span>🔍</span><span style="font-size:.78rem">Ctrl K</span></div>
     <div class="hbtn" onclick="chFS(-1)" style="font-family:sans-serif;font-size:.78rem;font-weight:700">A-</div>
     <div class="hbtn" onclick="chFS(1)" style="font-family:sans-serif;font-size:.78rem;font-weight:700">A+</div>
-    <div class="hbtn" onclick="openAM()">âš™</div>
-    <div class="hbtn on" id="rp-btn" onclick="togRP()">ðŸ“š</div>
+    <div class="hbtn" onclick="openAM()">⚙</div>
+    <div class="hbtn on" id="rp-btn" onclick="togRP()">📚</div>
   </div>
 </div>
 
 <div id="app">
   <div id="sb">
-    <div id="sb-search"><input type="text" id="bk-filter" placeholder="Filtrar librosâ€¦" oninput="filterBks(this.value)" /></div>
+    <div id="sb-search"><input type="text" id="bk-filter" placeholder="Filtrar libros…" oninput="filterBks(this.value)" /></div>
     <div id="book-list"></div>
     <div id="ch-nav">
-      <div id="ch-nav-lbl">CapÃ­tulos</div>
+      <div id="ch-nav-lbl">Capítulos</div>
       <div id="ch-grid"></div>
     </div>
   </div>
   <div id="main">
     <div id="ch-hdr">
-      <button class="nav-btn" onclick="prevCh()">â† Anterior</button>
-      <div id="ch-title">GÃ©nesis 1</div>
-      <button class="nav-btn" onclick="nextCh()">Siguiente â†’</button>
+      <button class="nav-btn" onclick="prevCh()">← Anterior</button>
+      <div id="ch-title">Génesis 1</div>
+      <button class="nav-btn" onclick="nextCh()">Siguiente →</button>
     </div>
     <div id="vc"></div>
   </div>
   <div id="rp">
     <div class="ptabs">
-      <div class="ptab on" id="pt-lex" onclick="swTab('lex')">LÃ©xico</div>
+      <div class="ptab on" id="pt-lex" onclick="swTab('lex')">Léxico</div>
       <div class="ptab" id="pt-ref" onclick="swTab('ref')">Refs. Cruzadas</div>
       <div class="ptab" id="pt-com" onclick="swTab('com')">Comentarios</div>
     </div>
-    <div class="pc on" id="pc-lex"><div class="placeholder"><div class="placeholder-ico">ðŸ”¤</div><div>Haz clic en cualquier <strong>palabra</strong> del texto para analizar el original hebreo o griego</div></div></div>
-    <div class="pc" id="pc-ref"><div class="placeholder"><div class="placeholder-ico">ðŸ”—</div><div>Haz clic en el <strong>nÃºmero</strong> de un versÃ­culo para ver sus referencias cruzadas</div></div></div>
-    <div class="pc" id="pc-com"><div class="placeholder"><div class="placeholder-ico">ðŸ“œ</div><div>Haz clic en el <strong>nÃºmero</strong> de un versÃ­culo para los comentarios de Calvino, Henry y Spurgeon</div></div></div>
+    <div class="pc on" id="pc-lex"><div class="placeholder"><div class="placeholder-ico">🔤</div><div>Haz clic en cualquier <strong>palabra</strong> del texto para analizar el original hebreo o griego</div></div></div>
+    <div class="pc" id="pc-ref"><div class="placeholder"><div class="placeholder-ico">🔗</div><div>Haz clic en el <strong>número</strong> de un versículo para ver sus referencias cruzadas</div></div></div>
+    <div class="pc" id="pc-com"><div class="placeholder"><div class="placeholder-ico">📜</div><div>Haz clic en el <strong>número</strong> de un versículo para los comentarios de Calvino, Henry y Spurgeon</div></div></div>
   </div>
 </div>
 
 <script>
-const BKS=[{n:'GÃ©nesis',t:'AT',c:50},{n:'Ã‰xodo',t:'AT',c:40},{n:'LevÃ­tico',t:'AT',c:27},{n:'NÃºmeros',t:'AT',c:36},{n:'Deuteronomio',t:'AT',c:34},{n:'JosuÃ©',t:'AT',c:24},{n:'Jueces',t:'AT',c:21},{n:'Rut',t:'AT',c:4},{n:'1 Samuel',t:'AT',c:31},{n:'2 Samuel',t:'AT',c:24},{n:'1 Reyes',t:'AT',c:22},{n:'2 Reyes',t:'AT',c:25},{n:'1 CrÃ³nicas',t:'AT',c:29},{n:'2 CrÃ³nicas',t:'AT',c:36},{n:'Esdras',t:'AT',c:10},{n:'NehemÃ­as',t:'AT',c:13},{n:'Ester',t:'AT',c:10},{n:'Job',t:'AT',c:42},{n:'Salmos',t:'AT',c:150},{n:'Proverbios',t:'AT',c:31},{n:'EclesiastÃ©s',t:'AT',c:12},{n:'Cantares',t:'AT',c:8},{n:'IsaÃ­as',t:'AT',c:66},{n:'JeremÃ­as',t:'AT',c:52},{n:'Lamentaciones',t:'AT',c:5},{n:'Ezequiel',t:'AT',c:48},{n:'Daniel',t:'AT',c:12},{n:'Oseas',t:'AT',c:14},{n:'Joel',t:'AT',c:3},{n:'AmÃ³s',t:'AT',c:9},{n:'AbdÃ­as',t:'AT',c:1},{n:'JonÃ¡s',t:'AT',c:4},{n:'Miqueas',t:'AT',c:7},{n:'NahÃºm',t:'AT',c:3},{n:'Habacuc',t:'AT',c:3},{n:'SofonÃ­as',t:'AT',c:3},{n:'Hageo',t:'AT',c:2},{n:'ZacarÃ­as',t:'AT',c:14},{n:'MalaquÃ­as',t:'AT',c:4},{n:'Mateo',t:'NT',c:28},{n:'Marcos',t:'NT',c:16},{n:'Lucas',t:'NT',c:24},{n:'Juan',t:'NT',c:21},{n:'Hechos',t:'NT',c:28},{n:'Romanos',t:'NT',c:16},{n:'1 Corintios',t:'NT',c:16},{n:'2 Corintios',t:'NT',c:13},{n:'GÃ¡latas',t:'NT',c:6},{n:'Efesios',t:'NT',c:6},{n:'Filipenses',t:'NT',c:4},{n:'Colosenses',t:'NT',c:4},{n:'1 Tesalonicenses',t:'NT',c:5},{n:'2 Tesalonicenses',t:'NT',c:3},{n:'1 Timoteo',t:'NT',c:6},{n:'2 Timoteo',t:'NT',c:4},{n:'Tito',t:'NT',c:3},{n:'FilemÃ³n',t:'NT',c:1},{n:'Hebreos',t:'NT',c:13},{n:'Santiago',t:'NT',c:5},{n:'1 Pedro',t:'NT',c:5},{n:'2 Pedro',t:'NT',c:3},{n:'1 Juan',t:'NT',c:5},{n:'2 Juan',t:'NT',c:1},{n:'3 Juan',t:'NT',c:1},{n:'Judas',t:'NT',c:1},{n:'Apocalipsis',t:'NT',c:22}];
+const BKS=[{n:'Génesis',t:'AT',c:50},{n:'Éxodo',t:'AT',c:40},{n:'Levítico',t:'AT',c:27},{n:'Números',t:'AT',c:36},{n:'Deuteronomio',t:'AT',c:34},{n:'Josué',t:'AT',c:24},{n:'Jueces',t:'AT',c:21},{n:'Rut',t:'AT',c:4},{n:'1 Samuel',t:'AT',c:31},{n:'2 Samuel',t:'AT',c:24},{n:'1 Reyes',t:'AT',c:22},{n:'2 Reyes',t:'AT',c:25},{n:'1 Crónicas',t:'AT',c:29},{n:'2 Crónicas',t:'AT',c:36},{n:'Esdras',t:'AT',c:10},{n:'Nehemías',t:'AT',c:13},{n:'Ester',t:'AT',c:10},{n:'Job',t:'AT',c:42},{n:'Salmos',t:'AT',c:150},{n:'Proverbios',t:'AT',c:31},{n:'Eclesiastés',t:'AT',c:12},{n:'Cantares',t:'AT',c:8},{n:'Isaías',t:'AT',c:66},{n:'Jeremías',t:'AT',c:52},{n:'Lamentaciones',t:'AT',c:5},{n:'Ezequiel',t:'AT',c:48},{n:'Daniel',t:'AT',c:12},{n:'Oseas',t:'AT',c:14},{n:'Joel',t:'AT',c:3},{n:'Amós',t:'AT',c:9},{n:'Abdías',t:'AT',c:1},{n:'Jonás',t:'AT',c:4},{n:'Miqueas',t:'AT',c:7},{n:'Nahúm',t:'AT',c:3},{n:'Habacuc',t:'AT',c:3},{n:'Sofonías',t:'AT',c:3},{n:'Hageo',t:'AT',c:2},{n:'Zacarías',t:'AT',c:14},{n:'Malaquías',t:'AT',c:4},{n:'Mateo',t:'NT',c:28},{n:'Marcos',t:'NT',c:16},{n:'Lucas',t:'NT',c:24},{n:'Juan',t:'NT',c:21},{n:'Hechos',t:'NT',c:28},{n:'Romanos',t:'NT',c:16},{n:'1 Corintios',t:'NT',c:16},{n:'2 Corintios',t:'NT',c:13},{n:'Gálatas',t:'NT',c:6},{n:'Efesios',t:'NT',c:6},{n:'Filipenses',t:'NT',c:4},{n:'Colosenses',t:'NT',c:4},{n:'1 Tesalonicenses',t:'NT',c:5},{n:'2 Tesalonicenses',t:'NT',c:3},{n:'1 Timoteo',t:'NT',c:6},{n:'2 Timoteo',t:'NT',c:4},{n:'Tito',t:'NT',c:3},{n:'Filemón',t:'NT',c:1},{n:'Hebreos',t:'NT',c:13},{n:'Santiago',t:'NT',c:5},{n:'1 Pedro',t:'NT',c:5},{n:'2 Pedro',t:'NT',c:3},{n:'1 Juan',t:'NT',c:5},{n:'2 Juan',t:'NT',c:1},{n:'3 Juan',t:'NT',c:1},{n:'Judas',t:'NT',c:1},{n:'Apocalipsis',t:'NT',c:22}];
 
 let bible=null,bIdx=0,cIdx=0,selWord=null,srchTimer=null;
 let apiKey=localStorage.getItem('bk_api')||'';
 let fs=parseFloat(localStorage.getItem('bk_fs')||'1.06');
 
 async function boot(){
-  prog(5,'Cargando Biblia RVR1960â€¦');
+  prog(5,'Cargando Biblia RVR1960…');
   const URLS=['biblia.json','https://cdn.jsdelivr.net/gh/thiagobodruk/bible@master/json/es_rvr.json','https://raw.githubusercontent.com/thiagobodruk/bible/master/json/es_rvr.json','https://api.allorigins.win/raw?url=https://raw.githubusercontent.com/thiagobodruk/bible/master/json/es_rvr.json'];
   for(let i=0;i<URLS.length;i++){
     try{
-      prog(10+i*18,`Intentando fuente ${i+1} de ${URLS.length}â€¦`);
+      prog(10+i*18,`Intentando fuente ${i+1} de ${URLS.length}…`);
       const r=await fetch(URLS[i]);
       if(!r.ok)throw new Error('HTTP '+r.status);
       const data=await r.json();
       if(!Array.isArray(data)||!data[0]?.chapters)throw new Error('Formato inesperado');
-      bible=data;prog(85,'Iniciando interfazâ€¦');
+      bible=data;prog(85,'Iniciando interfaz…');
       buildBkList();goTo(0,0);prog(100,'');
       setTimeout(()=>{document.getElementById('boot').classList.add('gone');if(!apiKey)setTimeout(openAM,600)},350);
       return;
-    }catch(e){console.warn('Fuente '+i+' fallÃ³:',e.message)}
+    }catch(e){console.warn('Fuente '+i+' falló:',e.message)}
   }
   document.getElementById('boot-msg').innerHTML=`<strong style="color:#f0c040">Error: no se pudo cargar la Biblia.</strong><br><br>Descarga <strong>biblia.json</strong> y ponlo en la misma carpeta que index.html.`;
 }
@@ -256,14 +256,14 @@ function nextCh(){if(cIdx<bible[bIdx].chapters.length-1)goTo(bIdx,cIdx+1);else i
 function buildBkList(){
   const el=document.getElementById('book-list');let h='',last=null;
   bible.forEach((bk,i)=>{const m=BKS[i]||{n:bk.abbrev||'Libro '+(i+1),t:i<39?'AT':'NT'};
-    if(m.t!==last){h+=`<div class="t-hdr">${m.t==='AT'?'ðŸ“œ Antiguo Testamento':'âœ Nuevo Testamento'}</div>`;last=m.t}
+    if(m.t!==last){h+=`<div class="t-hdr">${m.t==='AT'?'📜 Antiguo Testamento':'✝ Nuevo Testamento'}</div>`;last=m.t}
     h+=`<div class="bk" data-i="${i}" onclick="goTo(${i},0)">${m.n}</div>`});
   el.innerHTML=h;
 }
 function updBkList(){
   document.querySelectorAll('.bk').forEach((el,i)=>{const on=i===bIdx;el.classList.toggle('on',on);if(on)el.scrollIntoView({block:'nearest'})});
   const m=BKS[bIdx]||{n:bible[bIdx].abbrev};
-  document.getElementById('ch-nav-lbl').textContent=m.n+' â€” CapÃ­tulos';
+  document.getElementById('ch-nav-lbl').textContent=m.n+' — Capítulos';
 }
 function filterBks(q){const lq=q.toLowerCase();document.querySelectorAll('.bk').forEach(el=>{el.style.display=!lq||el.textContent.toLowerCase().includes(lq)?'':'none'})}
 function updChGrid(){
@@ -278,7 +278,7 @@ function renderCh(){
   vc.innerHTML=ch.map((vt,vi)=>{
     const words=vt.split(/(\s+)/).map(tok=>{
       if(/^\s+$/.test(tok))return tok;
-      const clean=tok.replace(/[.,;:!?Â¿Â¡""''()Â«Â»\-]/g,'');
+      const clean=tok.replace(/[.,;:!?¿¡""''()«»\-]/g,'');
       if(!clean)return xH(tok);
       return`<span class="w" data-w="${xA(clean)}" data-v="${vi}">${xH(tok)}</span>`;
     }).join('');
@@ -299,11 +299,11 @@ async function onW(e){
   const m=BKS[bIdx]||{n:bible[bIdx].abbrev};
   const vt=bible[bIdx].chapters[cIdx][vi];
   const isNT=bIdx>=39,ref=`${m.n} ${cIdx+1}:${vi+1}`;
-  setPC('lex',`<div class="loading-msg"><div class="dots"><span></span><span></span><span></span></div>Analizando "${xH(word)}" en ${ref}â€¦</div>`);
-  if(!apiKey){setPC('lex',`<div style="padding:18px"><div class="api-warn">âš  Configura tu API key de Claude para el anÃ¡lisis morfolÃ³gico hebreo/griego.</div><button class="btn" onclick="openAM()">Configurar API key</button></div>`);return}
+  setPC('lex',`<div class="loading-msg"><div class="dots"><span></span><span></span><span></span></div>Analizando "${xH(word)}" en ${ref}…</div>`);
+  if(!apiKey){setPC('lex',`<div style="padding:18px"><div class="api-warn">⚠ Configura tu API key de Claude para el análisis morfológico hebreo/griego.</div><button class="btn" onclick="openAM()">Configurar API key</button></div>`);return}
   try{
-    const sys=`Eres un experto en hebreo bÃ­blico (AT) y griego koinÃ© (NT), morfologÃ­a, lÃ©xico ampliado y hermenÃ©utica. Respondes en espaÃ±ol.`;
-    const prompt=`Analiza la palabra "${word}" en ${ref} (RVR1960):\n"${vt}"\n\nIdioma original: ${isNT?'griego koinÃ©':'hebreo bÃ­blico'}.\n\nResponde con este formato markdown:\n\n## [palabra en original]\n*[transliteraciÃ³n]* | Strong: [H/G+nÃºmero]\n\n### MorfologÃ­a\n| CategorÃ­a | AnÃ¡lisis |\n|-----------|----------|\n| Tipo | ... |\n| RaÃ­z | ... |\n${isNT?'| Caso | ... |\n| NÃºmero | ... |\n| GÃ©nero | ... |':'| GÃ©nero | ... |\n| NÃºmero | ... |\n| Binyan (si verbo) | ... |'}\n\n### LÃ©xico Ampliado\n[DefiniciÃ³n, rango semÃ¡ntico, matices]\n\n### En Este VersÃ­culo\n[Aporte teolÃ³gico especÃ­fico]\n\n### Ocurrencias Clave\n[3 usos importantes en la Biblia]`;
+    const sys=`Eres un experto en hebreo bíblico (AT) y griego koiné (NT), morfología, léxico ampliado y hermenéutica. Respondes en español.`;
+    const prompt=`Analiza la palabra "${word}" en ${ref} (RVR1960):\n"${vt}"\n\nIdioma original: ${isNT?'griego koiné':'hebreo bíblico'}.\n\nResponde con este formato markdown:\n\n## [palabra en original]\n*[transliteración]* | Strong: [H/G+número]\n\n### Morfología\n| Categoría | Análisis |\n|-----------|----------|\n| Tipo | ... |\n| Raíz | ... |\n${isNT?'| Caso | ... |\n| Número | ... |\n| Género | ... |':'| Género | ... |\n| Número | ... |\n| Binyan (si verbo) | ... |'}\n\n### Léxico Ampliado\n[Definición, rango semántico, matices]\n\n### En Este Versículo\n[Aporte teológico específico]\n\n### Ocurrencias Clave\n[3 usos importantes en la Biblia]`;
     const txt=await claude(prompt,sys,2000);
     setPC('lex',`<div class="ai-out">${md(txt)}</div>`);
   }catch(err){setPC('lex',`<div style="padding:18px;color:var(--t3);font-family:sans-serif">Error: ${xH(err.message)}</div>`)}
@@ -318,11 +318,11 @@ async function doRef(vi){
   document.querySelectorAll('.verse').forEach(el=>el.classList.remove('vhl'));
   const vel=document.getElementById('vs'+vi);
   if(vel){vel.classList.add('vhl');setTimeout(()=>vel.classList.remove('vhl'),2200)}
-  setPC('ref',`<div class="loading-msg"><div class="dots"><span></span><span></span><span></span></div>Buscando referencias para ${ref}â€¦</div>`);
-  if(!apiKey){setPC('ref',`<div style="padding:18px"><div class="api-warn">âš  Configura tu API key para ver referencias cruzadas.</div><button class="btn" onclick="openAM()">Configurar API key</button></div>`);return}
+  setPC('ref',`<div class="loading-msg"><div class="dots"><span></span><span></span><span></span></div>Buscando referencias para ${ref}…</div>`);
+  if(!apiKey){setPC('ref',`<div style="padding:18px"><div class="api-warn">⚠ Configura tu API key para ver referencias cruzadas.</div><button class="btn" onclick="openAM()">Configurar API key</button></div>`);return}
   try{
-    const sys=`Eres un teÃ³logo bÃ­blico experto en tipologÃ­a y conexiones AT-NT. Respondes en espaÃ±ol.`;
-    const prompt=`Para ${ref} (RVR1960): "${vt}"\n\nDa las 6 referencias cruzadas mÃ¡s significativas. Para cada una:\n\n### [Libro Cap:Vers]\n"[texto RVR1960]"\n*ConexiÃ³n teolÃ³gica:* [2-3 oraciones]\n\nAl final:\n## SÃ­ntesis\n[PÃ¡rrafo hermenÃ©utico integrador]`;
+    const sys=`Eres un teólogo bíblico experto en tipología y conexiones AT-NT. Respondes en español.`;
+    const prompt=`Para ${ref} (RVR1960): "${vt}"\n\nDa las 6 referencias cruzadas más significativas. Para cada una:\n\n### [Libro Cap:Vers]\n"[texto RVR1960]"\n*Conexión teológica:* [2-3 oraciones]\n\nAl final:\n## Síntesis\n[Párrafo hermenéutico integrador]`;
     const txt=await claude(prompt,sys,2000);
     setPC('ref',`<div><div class="vref-card" style="cursor:default"><div class="vref-ref">${ref}</div><div class="vref-txt">"${xH(vt)}"</div></div><div class="ai-out">${md(txt)}</div></div>`);
   }catch(err){setPC('ref',`<div style="padding:18px;color:var(--t3);font-family:sans-serif">${xH(err.message)}</div>`)}
@@ -332,20 +332,21 @@ async function doCom(vi){
   showRP();swTab('com');
   const m=BKS[bIdx]||{n:bible[bIdx].abbrev};
   const vt=bible[bIdx].chapters[cIdx][vi],ref=`${m.n} ${cIdx+1}:${vi+1}`;
-  setPC('com',`<div class="loading-msg"><div class="dots"><span></span><span></span><span></span></div>Sintetizando comentarios para ${ref}â€¦</div>`);
-  if(!apiKey){setPC('com',`<div style="padding:18px"><div class="api-warn">âš  Configura tu API key para los comentarios de Calvino, Henry y Spurgeon.</div><button class="btn" onclick="openAM()">Configurar API key</button></div>`);return}
+  setPC('com',`<div class="loading-msg"><div class="dots"><span></span><span></span><span></span></div>Sintetizando comentarios para ${ref}…</div>`);
+  if(!apiKey){setPC('com',`<div style="padding:18px"><div class="api-warn">⚠ Configura tu API key para los comentarios de Calvino, Henry y Spurgeon.</div><button class="btn" onclick="openAM()">Configurar API key</button></div>`);return}
   try{
-    const sys=`Eres un experto en historia de la exÃ©gesis: Calvino (Institutio, Commentarii), Matthew Henry (Commentary, 1710) y Spurgeon (Treasury of David, Metropolitan Tabernacle Pulpit). Reproduces con fidelidad su estilo. Escribes en espaÃ±ol pastoral.`;
-    const prompt=`Comenta ${ref} (RVR1960): "${vt}"\n\n## Calvino\n[3 pÃ¡rrafos: exÃ©gesis rigurosa, soberanÃ­a de Dios, perspectiva del pacto]\n\n## Matthew Henry\n[3 pÃ¡rrafos: observaciones prÃ¡cticas, aplicaciones devocionales, tono amable]\n\n## Spurgeon\n[3 pÃ¡rrafos: fervor evangelÃ­stico, ilustraciones vÃ­vidas, devociÃ³n cristocÃ©ntrica]\n\n## SÃ­ntesis Integradora\n[1-2 pÃ¡rrafos: cÃ³mo se complementan los tres]`;
+    const sys=`Eres un experto en historia de la exégesis: Calvino (Institutio, Commentarii), Matthew Henry (Commentary, 1710) y Spurgeon (Treasury of David, Metropolitan Tabernacle Pulpit). Reproduces con fidelidad su estilo. Escribes en español pastoral.`;
+    const prompt=`Comenta ${ref} (RVR1960): "${vt}"\n\n## Calvino\n[3 párrafos: exégesis rigurosa, soberanía de Dios, perspectiva del pacto]\n\n## Matthew Henry\n[3 párrafos: observaciones prácticas, aplicaciones devocionales, tono amable]\n\n## Spurgeon\n[3 párrafos: fervor evangelístico, ilustraciones vívidas, devoción cristocéntrica]\n\n## Síntesis Integradora\n[1-2 párrafos: cómo se complementan los tres]`;
     const txt=await claude(prompt,sys,2800);
     setPC('com',`<div><div class="vref-card" style="cursor:default"><div class="vref-ref">${ref}</div><div class="vref-txt">"${xH(vt)}"</div></div><div class="ai-out">${md(txt)}</div></div>`);
   }catch(err){setPC('com',`<div style="padding:18px;color:var(--t3);font-family:sans-serif">${xH(err.message)}</div>`)}
 }
 
+// ✅ CAMBIO CLAVE: ahora llama a la Netlify Function, no directo a Anthropic
 async function claude(user,system,maxTok=2048){
-  const r=await fetch('https://api.anthropic.com/v1/messages',{
+  const r=await fetch('/.netlify/functions/claude',{
     method:'POST',
-    headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-dangerous-direct-browser-calls':'true','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-calls':'true'},
+    headers:{'Content-Type':'application/json'},
     body:JSON.stringify({model:'claude-sonnet-4-5-20250929',max_tokens:maxTok,system,messages:[{role:'user',content:user}]})
   });
   if(!r.ok){const err=await r.json().catch(()=>({}));throw new Error(err.error?.message||'API error '+r.status)}
