@@ -337,7 +337,7 @@ async function doCom(vi){
   try{
     const sys=`Eres un experto en historia de la exégesis: Calvino (Institutio, Commentarii), Matthew Henry (Commentary, 1710) y Spurgeon (Treasury of David, Metropolitan Tabernacle Pulpit). Reproduces con fidelidad su estilo. Escribes en español pastoral.`;
     const prompt=`Comenta ${ref} (RVR1960): "${vt}"\n\n## Calvino\n[3 párrafos: exégesis rigurosa, soberanía de Dios, perspectiva del pacto]\n\n## Matthew Henry\n[3 párrafos: observaciones prácticas, aplicaciones devocionales, tono amable]\n\n## Spurgeon\n[3 párrafos: fervor evangelístico, ilustraciones vívidas, devoción cristocéntrica]\n\n## Síntesis Integradora\n[1-2 párrafos: cómo se complementan los tres]`;
-    const txt=await claude(prompt,sys,2800);
+    const txt=await claude(prompt,sys,1200);
     setPC('com',`<div><div class="vref-card" style="cursor:default"><div class="vref-ref">${ref}</div><div class="vref-txt">"${xH(vt)}"</div></div><div class="ai-out">${md(txt)}</div></div>`);
   }catch(err){setPC('com',`<div style="padding:18px;color:var(--t3);font-family:sans-serif">${xH(err.message)}</div>`)}
 }
