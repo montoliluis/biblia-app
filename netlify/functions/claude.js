@@ -9,7 +9,7 @@ exports.handler = async (event) => {
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'
+        'anthropic-version': '2023-06-05'
       },
       body: JSON.stringify(body)
     });
