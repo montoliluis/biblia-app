@@ -8,7 +8,7 @@
     :root {
       --bg:       #1a0f07;
       --bg2:      #241508;
-      --bg3:      #2e1aa0a;
+      --bg3:      #2e1a0a;
       --hover:    #3a2010;
       --border:   #5a3520;
       --t1:       #f5d87a;
@@ -344,9 +344,11 @@ async function doCom(vi){
 
 // ✅ CAMBIO CLAVE: ahora llama a la Netlify Function, no directo a Anthropic
 async function claude(user,system,maxTok=2048){
+  const headers={'Content-Type':'application/json'};
+  if(apiKey)headers['x-user-key']=apiKey;   // clave del usuario (opcional); si no, la función usa la del servidor
   const r=await fetch('/.netlify/functions/claude',{
     method:'POST',
-    headers:{'Content-Type':'application/json'},
+    headers,
     body:JSON.stringify({model:'claude-sonnet-4-5-20250929',max_tokens:maxTok,system,messages:[{role:'user',content:user}]})
   });
   if(!r.ok){const err=await r.json().catch(()=>({}));throw new Error(err.error?.message||'API error '+r.status)}
