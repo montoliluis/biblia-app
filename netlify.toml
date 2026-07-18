@@ -1,11 +1,6 @@
+# Sitio 100% estático. No hay funciones de servidor ni claves en el servidor:
+# la app llama directo a Anthropic con la clave que cada usuario guarda en su
+# propio navegador. Así nadie de afuera puede gastar tus créditos.
 [build]
   publish = "."
   command = "echo ok"
-
-[functions]
-  directory = "netlify/functions"
-  node_bundler = "esbuild"
-  # Máx. 26s, pero requiere plan Pro + solicitud a soporte de Netlify.
-  # En el plan gratis el límite real es 10s. Para llamadas sin ese límite,
-  # configurá tu propia API key en la app (llama directo a Anthropic).
-  timeout = 26
