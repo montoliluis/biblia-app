@@ -8,7 +8,7 @@
     :root {
       --bg:       #1a0f07;
       --bg2:      #241508;
-      --bg3:      #2e1aa0a;
+      --bg3:      #2e1a0a;
       --hover:    #3a2010;
       --border:   #5a3520;
       --t1:       #f5d87a;
@@ -19,19 +19,63 @@
       --accentL:  rgba(200,134,10,.18);
       --gold:     #f0c040;
       --green:    #8bc34a;
+      --on-accent:#1a0f07;
       --sw: 272px;
       --pw: 370px;
       --hh: 52px;
     }
+    /* ── Tema 2: Pergamino (fondo marrón amarillento, títulos bordó, texto marrón oscuro) ── */
+    html[data-theme="pergamino"]{
+      --bg:       #e9dcbf;
+      --bg2:      #dccaa0;
+      --bg3:      #f3ebd6;
+      --hover:    #cdb888;
+      --border:   #b49a68;
+      --t1:       #2e2012;
+      --t2:       #4d3a20;
+      --t3:       #7a5f38;
+      --accent:   #7a1f2b;
+      --accentH:  #9c2b3a;
+      --accentL:  rgba(122,31,43,.14);
+      --gold:     #7a1f2b;
+      --green:    #6b8e23;
+      --on-accent:#f3ebd6;
+    }
+    /* ── Tema 3: Esmeralda (fondo verde, títulos dorados, texto marrón oscuro) ── */
+    html[data-theme="esmeralda"]{
+      --bg:       #cddac4;
+      --bg2:      #b7cbac;
+      --bg3:      #dce7d4;
+      --hover:    #a6bd9a;
+      --border:   #8aa77d;
+      --t1:       #2c2413;
+      --t2:       #443619;
+      --t3:       #6d5a34;
+      --accent:   #b8860b;
+      --accentH:  #d4a017;
+      --accentL:  rgba(184,134,11,.18);
+      --gold:     #9c7a12;
+      --green:    #4a6b52;
+      --on-accent:#2c2413;
+    }
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:Georgia,serif;background:var(--bg);color:var(--t1);height:100vh;overflow:hidden;display:flex;flex-direction:column}
     #hdr{height:var(--hh);background:var(--bg2);border-bottom:2px solid var(--border);display:flex;align-items:center;padding:0 14px;gap:10px;flex-shrink:0;z-index:50}
-    #hdr-logo{width:30px;height:30px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#1a0f07;font-size:16px;flex-shrink:0;font-weight:bold}
+    #hdr-logo{width:30px;height:30px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;color:var(--on-accent);font-size:16px;flex-shrink:0;font-weight:bold}
     #hdr-title{font-family:Georgia,serif;font-size:1.1rem;font-weight:700;flex:1;color:var(--gold)}
     #hdr-title span{color:var(--accentH)}
     .hbtn{background:var(--hover);border:1px solid var(--border);color:var(--t2);border-radius:7px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.9rem;transition:.15s;flex-shrink:0;font-family:sans-serif}
-    .hbtn:hover{background:var(--accent);color:#1a0f07;border-color:var(--accentH)}
-    .hbtn.on{background:var(--accent);color:#1a0f07;border-color:var(--accentH)}
+    .hbtn:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accentH)}
+    .hbtn.on{background:var(--accent);color:var(--on-accent);border-color:var(--accentH)}
+    .tm{position:absolute;top:42px;right:0;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:6px;min-width:214px;box-shadow:0 12px 40px rgba(0,0,0,.5);z-index:120;display:none}
+    .tm.open{display:block}
+    .tm-hdr{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);padding:6px 8px 8px;font-family:sans-serif}
+    .tm-opt{display:flex;align-items:center;gap:10px;padding:8px;border-radius:7px;cursor:pointer;transition:.12s}
+    .tm-opt:hover{background:var(--hover)}
+    .tm-opt.on{background:var(--accentL)}
+    .tm-sw{width:26px;height:26px;border-radius:6px;border:1px solid var(--border);flex-shrink:0}
+    .tm-nm{font-family:sans-serif;font-size:.85rem;color:var(--t1);font-weight:600;display:flex;flex-direction:column;line-height:1.25}
+    .tm-nm small{font-size:.68rem;color:var(--t3);font-weight:400}
     #app{display:flex;flex:1;overflow:hidden}
     #sb{width:var(--sw);background:var(--bg2);border-right:2px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden}
     #sb-search{padding:10px;border-bottom:1px solid var(--border)}
@@ -48,23 +92,23 @@
     #ch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(30px,1fr));gap:3px;max-height:140px;overflow-y:auto}
     .ch-btn{padding:4px 2px;text-align:center;cursor:pointer;border-radius:5px;font-size:.77rem;background:var(--bg);color:var(--t2);border:1px solid var(--border);transition:.12s;font-family:sans-serif}
     .ch-btn:hover{background:var(--hover);color:var(--gold)}
-    .ch-btn.on{background:var(--accent);color:#1a0f07;border-color:var(--accentH);font-weight:700}
+    .ch-btn.on{background:var(--accent);color:var(--on-accent);border-color:var(--accentH);font-weight:700}
     #main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
     #ch-hdr{padding:9px 20px;background:var(--bg2);border-bottom:2px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
     #ch-title{flex:1;font-size:1.1rem;font-weight:700;font-family:Georgia,serif;color:var(--gold)}
     .nav-btn{background:var(--hover);border:1px solid var(--border);color:var(--t2);border-radius:7px;padding:5px 12px;cursor:pointer;font-size:.82rem;font-family:sans-serif;transition:.12s;white-space:nowrap}
-    .nav-btn:hover{background:var(--accent);color:#1a0f07;border-color:var(--accentH)}
+    .nav-btn:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accentH)}
     #vc{flex:1;overflow-y:auto;padding:28px 36px;width:100%;max-width:780px;margin:0 auto}
     .verse{margin-bottom:4px;line-height:2;font-size:var(--fs,1.06rem)}
     .vnum{font-size:.65rem;font-weight:700;color:var(--accent);vertical-align:super;margin-right:3px;cursor:pointer;user-select:none;font-family:sans-serif;padding:1px 3px;border-radius:3px;transition:.1s}
     .vnum:hover{background:var(--accentL);color:var(--accentH)}
     .w{cursor:pointer;padding:1px 2px;border-radius:3px;transition:background .1s}
     .w:hover{background:var(--accentL);color:var(--accentH)}
-    .w.sel{background:var(--accent);color:#1a0f07}
+    .w.sel{background:var(--accent);color:var(--on-accent)}
     .vact{display:none;gap:4px;margin-left:6px;vertical-align:middle}
     .verse:hover .vact{display:inline-flex}
     .vabtn{font-size:.68rem;padding:1px 7px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;cursor:pointer;color:var(--t3);font-family:sans-serif;transition:.1s}
-    .vabtn:hover{background:var(--accent);color:#1a0f07;border-color:var(--accentH)}
+    .vabtn:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accentH)}
     .vhl{background:rgba(200,134,10,.2);border-radius:5px;transition:background 1.5s}
     #rp{width:var(--pw);background:var(--bg2);border-left:2px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;transition:width .25s;overflow:hidden}
     #rp.closed{width:0}
@@ -128,7 +172,7 @@
     #am-box input:focus{border-color:var(--accent)}
     .am-note{font-size:.75rem;color:var(--t3);font-family:sans-serif;line-height:1.5;margin-top:14px}
     .am-note strong{color:var(--accent)}
-    .btn{background:var(--accent);color:#1a0f07;border:none;border-radius:7px;padding:9px 18px;font-size:.87rem;font-weight:700;cursor:pointer;font-family:sans-serif;transition:.12s}
+    .btn{background:var(--accent);color:var(--on-accent);border:none;border-radius:7px;padding:9px 18px;font-size:.87rem;font-weight:700;cursor:pointer;font-family:sans-serif;transition:.12s}
     .btn:hover{background:var(--accentH)}
     .btn2{background:var(--hover);color:var(--t2);border:1px solid var(--border);border-radius:7px;padding:9px 18px;font-size:.87rem;font-weight:600;cursor:pointer;font-family:sans-serif;margin-left:7px}
     .btn2:hover{background:var(--bg3);color:var(--gold)}
@@ -187,6 +231,15 @@
     <div class="hbtn" onclick="openSM()" style="width:auto;padding:0 11px;gap:6px;font-size:.8rem;color:var(--t3)"><span>🔍</span><span style="font-size:.78rem">Ctrl K</span></div>
     <div class="hbtn" onclick="chFS(-1)" style="font-family:sans-serif;font-size:.78rem;font-weight:700">A-</div>
     <div class="hbtn" onclick="chFS(1)" style="font-family:sans-serif;font-size:.78rem;font-weight:700">A+</div>
+    <div style="position:relative">
+      <div class="hbtn" onclick="togTM(event)" title="Tema de colores">🎨</div>
+      <div id="tm" class="tm">
+        <div class="tm-hdr">Tema de colores</div>
+        <div class="tm-opt" data-theme="warm" onclick="setTheme('warm')"><span class="tm-sw" style="background:linear-gradient(135deg,#241508 48%,#f0c040 52%)"></span><span class="tm-nm">Original<small>cálido oscuro</small></span></div>
+        <div class="tm-opt" data-theme="pergamino" onclick="setTheme('pergamino')"><span class="tm-sw" style="background:linear-gradient(135deg,#dccaa0 48%,#7a1f2b 52%)"></span><span class="tm-nm">Pergamino<small>bordó, firme y sólido</small></span></div>
+        <div class="tm-opt" data-theme="esmeralda" onclick="setTheme('esmeralda')"><span class="tm-sw" style="background:linear-gradient(135deg,#b7cbac 48%,#9c7a12 52%)"></span><span class="tm-nm">Esmeralda<small>verde y dorado</small></span></div>
+      </div>
+    </div>
     <div class="hbtn" onclick="openAM()">⚙</div>
     <div class="hbtn on" id="rp-btn" onclick="togRP()">📚</div>
   </div>
@@ -227,6 +280,13 @@ const BKS=[{n:'Génesis',t:'AT',c:50},{n:'Éxodo',t:'AT',c:40},{n:'Levítico',t:
 let bible=null,bIdx=0,cIdx=0,selWord=null,srchTimer=null;
 let apiKey=localStorage.getItem('bk_api')||'';
 let fs=parseFloat(localStorage.getItem('bk_fs')||'1.06');
+let theme=localStorage.getItem('bk_theme')||'warm';
+
+function applyTheme(){document.documentElement.dataset.theme=theme;document.querySelectorAll('.tm-opt').forEach(el=>el.classList.toggle('on',el.dataset.theme===theme))}
+function setTheme(t){theme=t;localStorage.setItem('bk_theme',t);applyTheme();document.getElementById('tm').classList.remove('open')}
+function togTM(e){e.stopPropagation();document.getElementById('tm').classList.toggle('open')}
+document.addEventListener('click',()=>document.getElementById('tm').classList.remove('open'));
+applyTheme();
 
 async function boot(){
   prog(5,'Cargando Biblia RVR1960…');
@@ -344,13 +404,37 @@ async function doCom(vi){
 
 // ✅ CAMBIO CLAVE: ahora llama a la Netlify Function, no directo a Anthropic
 async function claude(user,system,maxTok=2048){
-  const r=await fetch('/.netlify/functions/claude',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({model:'claude-sonnet-4-5-20250929',max_tokens:maxTok,system,messages:[{role:'user',content:user}]})
-  });
-  if(!r.ok){const err=await r.json().catch(()=>({}));throw new Error(err.error?.message||'API error '+r.status)}
-  const d=await r.json();return d.content[0].text;
+  const payload={model:'claude-sonnet-4-5-20250929',max_tokens:maxTok,system,messages:[{role:'user',content:user}]};
+  let r;
+  if(apiKey){
+    // Con clave propia: llamada DIRECTA a Anthropic desde el navegador.
+    // Evita el límite de 10s de las Netlify Functions (causa del error 502 en
+    // los comentarios, que son la respuesta más larga).
+    r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify(payload)
+    });
+  }else{
+    // Sin clave propia: se usa la Netlify Function con la clave del servidor (límite 10s).
+    r=await fetch('/.netlify/functions/claude',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+  }
+  if(!r.ok){
+    let msg;
+    if(r.status===502||r.status===504){
+      msg='La respuesta tardó demasiado (límite de 10s de la función de Netlify en el plan gratis). Configurá tu propia API key con el botón ⚙ para hacer llamadas sin ese límite.';
+    }else{
+      const err=await r.json().catch(()=>({}));msg=err.error?.message||'Error de la API ('+r.status+')';
+    }
+    throw new Error(msg);
+  }
+  const d=await r.json();
+  if(!d.content||!d.content[0])throw new Error(d.error?.message||'Respuesta vacía de la API');
+  return d.content[0].text;
 }
 
 function openSM(){document.getElementById('sm').classList.add('open');setTimeout(()=>document.getElementById('sm-inp').focus(),40)}
