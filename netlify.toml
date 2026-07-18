@@ -5,5 +5,7 @@
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
-[functions."claude"]
-  timeout = 10
+  # Máx. 26s, pero requiere plan Pro + solicitud a soporte de Netlify.
+  # En el plan gratis el límite real es 10s. Para llamadas sin ese límite,
+  # configurá tu propia API key en la app (llama directo a Anthropic).
+  timeout = 26

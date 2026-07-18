@@ -404,15 +404,37 @@ async function doCom(vi){
 
 // ✅ CAMBIO CLAVE: ahora llama a la Netlify Function, no directo a Anthropic
 async function claude(user,system,maxTok=2048){
-  const headers={'Content-Type':'application/json'};
-  if(apiKey)headers['x-user-key']=apiKey;   // clave del usuario (opcional); si no, la función usa la del servidor
-  const r=await fetch('/.netlify/functions/claude',{
-    method:'POST',
-    headers,
-    body:JSON.stringify({model:'claude-sonnet-4-5-20250929',max_tokens:maxTok,system,messages:[{role:'user',content:user}]})
-  });
-  if(!r.ok){const err=await r.json().catch(()=>({}));throw new Error(err.error?.message||'API error '+r.status)}
-  const d=await r.json();return d.content[0].text;
+  const payload={model:'claude-sonnet-4-5-20250929',max_tokens:maxTok,system,messages:[{role:'user',content:user}]};
+  let r;
+  if(apiKey){
+    // Con clave propia: llamada DIRECTA a Anthropic desde el navegador.
+    // Evita el límite de 10s de las Netlify Functions (causa del error 502 en
+    // los comentarios, que son la respuesta más larga).
+    r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify(payload)
+    });
+  }else{
+    // Sin clave propia: se usa la Netlify Function con la clave del servidor (límite 10s).
+    r=await fetch('/.netlify/functions/claude',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+  }
+  if(!r.ok){
+    let msg;
+    if(r.status===502||r.status===504){
+      msg='La respuesta tardó demasiado (límite de 10s de la función de Netlify en el plan gratis). Configurá tu propia API key con el botón ⚙ para hacer llamadas sin ese límite.';
+    }else{
+      const err=await r.json().catch(()=>({}));msg=err.error?.message||'Error de la API ('+r.status+')';
+    }
+    throw new Error(msg);
+  }
+  const d=await r.json();
+  if(!d.content||!d.content[0])throw new Error(d.error?.message||'Respuesta vacía de la API');
+  return d.content[0].text;
 }
 
 function openSM(){document.getElementById('sm').classList.add('open');setTimeout(()=>document.getElementById('sm-inp').focus(),40)}
