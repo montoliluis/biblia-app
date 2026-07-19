@@ -12,6 +12,13 @@ App web de estudio bíblico (Reina-Valera 1960) en una sola página. Dos funcion
    - Clic en cualquier **palabra** → análisis del original hebreo/griego: morfología, número de Strong, léxico ampliado, aporte teológico y ocurrencias clave.
    - Clic en el **número de versículo** → referencias cruzadas y comentarios (Calvino, Matthew Henry, Spurgeon).
 
+3. **Humanizador de Sermones 🕊️** (requiere API key de Claude)
+   - Botón **🕊️ Humanizar** en la barra superior. Pegás un sermón, estudio o devocional con "olor a IA" y lo reescribe con **voz de púlpito hispano** (referencia: Sugel Michelén, tradición expositiva reformada).
+   - Aplica la metodología anti-detección contra **GPTZero y detectores similares**: sube la *perplejidad* (palabras concretas, regionalismos, imágenes inesperadas) y el *burstiness* (ritmo irregular, ráfagas de oraciones cortas y largas), con imperfecciones orales deliberadas y arranques impredecibles.
+   - **Doble pase**: pase 1 da voz pastoral; pase 2 hace una auditoría estadística y corrige solo lo que delata IA.
+   - **Intensidad** ajustable (Suave / Medio / Fuerte), opción de ver la **auditoría anti-detección** y botón de **copiar** el resultado.
+   - Respeta el texto bíblico, las citas y la doctrina del original: transforma la *voz*, no el contenido. La meta es que el sermón suene al pastor que lo va a predicar.
+
 ## Seguridad: app blindada, sin servidor 🔒
 
 Esta app es un **sitio 100% estático**. **No hay servidor ni clave compartida.**
