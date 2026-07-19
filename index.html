@@ -188,38 +188,6 @@
     ::-webkit-scrollbar-track{background:transparent}
     ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
     ::-webkit-scrollbar-thumb:hover{background:var(--t3)}
-
-    /* ── Humanizador de Sermones ── */
-    #hm{display:none;position:fixed;inset:0;background:rgba(0,0,0,.86);z-index:210;align-items:center;justify-content:center;padding:26px}
-    #hm.open{display:flex}
-    #hm-box{width:1160px;max-width:96vw;height:88vh;background:var(--bg3);border-radius:16px;border:2px solid var(--border);box-shadow:0 24px 80px rgba(0,0,0,.85);display:flex;flex-direction:column;overflow:hidden}
-    #hm-hdr{display:flex;align-items:center;gap:12px;padding:14px 20px;background:var(--bg2);border-bottom:2px solid var(--border);flex-shrink:0}
-    #hm-hdr h2{font-family:Georgia,serif;font-size:1.15rem;color:var(--gold);flex:1;font-weight:700}
-    #hm-hdr h2 small{display:block;font-size:.72rem;color:var(--t3);font-weight:400;font-family:sans-serif;margin-top:2px}
-    #hm-body{flex:1;display:flex;overflow:hidden;min-height:0}
-    .hm-pane{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
-    .hm-pane.left{border-right:2px solid var(--border)}
-    .hm-plbl{padding:9px 18px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--gold);font-family:sans-serif;border-bottom:1px solid var(--border);background:var(--bg2);display:flex;align-items:center;gap:8px}
-    .hm-plbl .hm-count{margin-left:auto;color:var(--t3);font-weight:400;letter-spacing:0}
-    #hm-in{flex:1;width:100%;background:var(--bg);border:none;outline:none;resize:none;color:var(--t1);font-family:Georgia,serif;font-size:.95rem;line-height:1.7;padding:18px}
-    #hm-in::placeholder{color:var(--t3)}
-    #hm-out{flex:1;overflow-y:auto;padding:18px 22px;background:var(--bg)}
-    #hm-out .placeholder{min-height:100%}
-    .hm-ctrls{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 20px;background:var(--bg2);border-top:2px solid var(--border);flex-shrink:0}
-    .hm-field{display:flex;align-items:center;gap:7px;font-family:sans-serif;font-size:.8rem;color:var(--t2)}
-    .hm-field label{color:var(--t3);font-weight:600}
-    .hm-seg{display:inline-flex;border:1px solid var(--border);border-radius:7px;overflow:hidden}
-    .hm-seg button{background:var(--bg);color:var(--t3);border:none;padding:6px 12px;font-size:.78rem;font-weight:600;cursor:pointer;font-family:sans-serif;transition:.12s}
-    .hm-seg button:hover{background:var(--hover);color:var(--gold)}
-    .hm-seg button.on{background:var(--accent);color:var(--on-accent)}
-    .hm-check{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-family:sans-serif;font-size:.8rem;color:var(--t2);user-select:none}
-    .hm-check input{width:15px;height:15px;accent-color:var(--accent);cursor:pointer}
-    .hm-spacer{flex:1}
-    #hm-audit{margin-top:16px;padding:13px 15px;background:var(--bg3);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:8px;font-family:sans-serif;font-size:.8rem;color:var(--t2);line-height:1.6}
-    #hm-audit .ai-out h2,#hm-audit .ai-out h3{border:none;color:var(--green);margin-top:8px}
-    .hm-scorebar{display:flex;align-items:center;gap:10px;margin:4px 0 10px;font-family:sans-serif;font-size:.8rem}
-    .hm-scorebar .track{flex:1;height:8px;background:var(--border);border-radius:5px;overflow:hidden}
-    .hm-scorebar .fill{height:100%;background:var(--green);border-radius:5px;transition:width .5s}
   </style>
 </head>
 <body>
@@ -241,41 +209,6 @@
       <button class="btn2" onclick="closeAM()">Continuar sin IA</button>
     </div>
     <div class="am-note">Obtén tu clave en <strong>console.anthropic.com</strong>. 🔒 Se guarda <strong>solo en este navegador</strong> (localStorage) y se envía únicamente a Anthropic. No hay servidor: nadie más puede usar tu clave ni gastar tus créditos.</div>
-  </div>
-</div>
-
-<div id="hm" onclick="if(event.target===this)closeHM()">
-  <div id="hm-box">
-    <div id="hm-hdr">
-      <div id="hdr-logo" style="background:var(--green)">🕊️</div>
-      <h2>Humanizador de Sermones<small>Voz pastoral hispana + anti-detección (GPTZero, Turnitin y similares)</small></h2>
-      <button class="btn2" style="margin:0" onclick="closeHM()">Cerrar ✕</button>
-    </div>
-    <div id="hm-body">
-      <div class="hm-pane left">
-        <div class="hm-plbl">📝 Texto original (borrador con “olor a IA”)<span class="hm-count" id="hm-cnt">0 palabras</span></div>
-        <textarea id="hm-in" placeholder="Pegá aquí tu sermón, estudio bíblico o devocional…&#10;&#10;La IA lo va a reescribir con voz de púlpito hispano (referencia: Sugel Michelén): ritmo irregular, palabras concretas, asombro genuino y las imperfecciones orales de un predicador real — todo para que suene a persona, no a máquina." oninput="hmCount()"></textarea>
-      </div>
-      <div class="hm-pane">
-        <div class="hm-plbl">🕊️ Sermón humanizado<span class="hm-count"><button class="btn2" id="hm-copy" style="margin:0;padding:3px 11px;font-size:.74rem;display:none" onclick="copyHM()">📋 Copiar</button></span></div>
-        <div id="hm-out"><div class="placeholder"><div class="placeholder-ico">🕊️</div><div>Pegá tu texto a la izquierda y tocá <strong>Humanizar</strong>.<br>El resultado va a sonar a predicador real, no a IA.</div></div></div>
-      </div>
-    </div>
-    <div class="hm-ctrls">
-      <div class="hm-field">
-        <label>Intensidad</label>
-        <div class="hm-seg" id="hm-int">
-          <button data-v="suave" onclick="hmSetInt('suave')">Suave</button>
-          <button data-v="medio" class="on" onclick="hmSetInt('medio')">Medio</button>
-          <button data-v="fuerte" onclick="hmSetInt('fuerte')">Fuerte</button>
-        </div>
-      </div>
-      <label class="hm-check"><input type="checkbox" id="hm-double" checked>Doble pase <span style="color:var(--t3)">(máxima calidad)</span></label>
-      <label class="hm-check"><input type="checkbox" id="hm-showaudit">Mostrar auditoría anti-detección</label>
-      <div class="hm-spacer"></div>
-      <button class="btn2" style="margin:0" onclick="hmClear()">Limpiar</button>
-      <button class="btn" id="hm-run" onclick="runHumanize()">🕊️ Humanizar</button>
-    </div>
   </div>
 </div>
 
@@ -307,7 +240,6 @@
         <div class="tm-opt" data-theme="esmeralda" onclick="setTheme('esmeralda')"><span class="tm-sw" style="background:linear-gradient(135deg,#b7cbac 48%,#9c7a12 52%)"></span><span class="tm-nm">Esmeralda<small>verde y dorado</small></span></div>
       </div>
     </div>
-    <div class="hbtn" onclick="openHM()" title="Humanizador de sermones" style="width:auto;padding:0 11px;gap:6px;font-size:.8rem"><span>🕊️</span><span style="font-size:.78rem;font-family:sans-serif;font-weight:700">Humanizar</span></div>
     <div class="hbtn" onclick="openAM()">⚙</div>
     <div class="hbtn on" id="rp-btn" onclick="togRP()">📚</div>
   </div>
@@ -536,126 +468,9 @@ function openAM(){document.getElementById('am-inp').value=apiKey;document.getEle
 function closeAM(){document.getElementById('am').classList.remove('open')}
 function saveKey(){apiKey=document.getElementById('am-inp').value.trim();localStorage.setItem('bk_api',apiKey);closeAM()}
 
-/* ═══════════ HUMANIZADOR DE SERMONES ═══════════ */
-let hmInt='medio', hmLastRaw='', hmBusy=false;
-
-const HUM_SYS = [
-'Eres un editor de sermones que transforma textos con "olor a IA" en predicación auténtica, cálida y pastoral en español.',
-'Tu referencia de voz es Sugel Michelén: predicación expositiva reformada, rigor exegético, corazón pastoral y aplicación directa a la vida real.',
-'',
-'META DOBLE: el texto no solo debe SONAR humano al oído, también debe MEDIR humano ante los detectores estadísticos (GPTZero y similares). Estos miden dos cosas y tú atacas las dos:',
-'',
-'1) PERPLEJIDAD (qué tan predecible es cada palabra). La IA elige siempre la palabra más probable; sube la perplejidad con:',
-'   - Palabras concretas en vez de abstractas: no "circunstancias adversas" sino "la cuenta que no llega a fin de mes".',
-'   - Regionalismos y habla hispana real ("se te va la vida en eso", "quedó ahí nomás", "de una", "ni te cuento").',
-'   - Combinaciones inesperadas ("una fe con callos en las manos" en vez de "una fe madura").',
-'   - Nombres, lugares y objetos específicos ("el mate frío de las seis"), nunca "los momentos de dificultad".',
-'',
-'2) BURSTINESS (variabilidad del ritmo). La IA hace oraciones de largo parejo (15-25 palabras). Tú escribes en ráfagas. REGLAS MEDIBLES:',
-'   - En cada bloque de 5 oraciones debe haber AL MENOS una de menos de 6 palabras Y una de más de 25.',
-'   - Ningún párrafo con el mismo número de oraciones que el anterior. Alterna párrafos largos (6-9 oraciones) con párrafos de una sola línea.',
-'   - Nunca dos párrafos seguidos que empiecen con la misma estructura gramatical.',
-'',
-'VOZ PASTORAL (patrones de Michelén a inyectar):',
-'- Contraste directo sin adornos: afirmación corta, afirmación corta, pausa, giro.',
-'- Preguntas retóricas como respiración del sermón (pregunta corta, silencio implícito, respuesta que sorprende).',
-'- Movimiento del texto hacia la persona: termina en "tú"; el texto es una carta al que está en la banca, no información.',
-'- Posesivos íntimos con Dios: "Nuestro Dios", "tu porción".',
-'- Ilustración desde lo cotidiano y concreto antes de volver al texto.',
-'- Asombro genuino: el predicador descubre la verdad JUNTO al oyente, no la dicta.',
-'- "Nosotros" que incluye al predicador, y de vez en cuando primera persona con confesión honesta ("a mí esto me costó años entenderlo").',
-'- Urgencia evangélica al cierre, sin suavizar y sin moraleja.',
-'',
-'IMPERFECCIONES ORALES DELIBERADAS (2-3 en todo el texto, en puntos naturales):',
-'- Autocorrección: "Pablo estaba preso — bueno, más que preso, encadenado a un soldado las veinticuatro horas."',
-'- Reformulación: "Es paciencia... aunque paciencia se queda corta. Es aguante."',
-'- Digresión breve que vuelve al punto.',
-'',
-'ARRANQUES IMPREDECIBLES de párrafo: una palabra sola ("Nada." "Escuchá." "Gracia."), la mitad de una idea, una escena, o una pregunta sin preámbulo.',
-'CIERRES QUE NO CIERRAN: termina secciones con pregunta abierta, imagen o frase corta; nunca con resumen.',
-'',
-'PALABRAS PROHIBIDAS (delatan IA — elimínalas siempre): crucial, fundamental, es importante destacar, en definitiva, en conclusión, podemos observar, cabe mencionar, a lo largo de, nos invita a reflexionar, profunda verdad, rica enseñanza, nos recuerda, asimismo, por ende, por consiguiente, el texto nos enseña que, trascendental, significativo, en el contexto de, sin duda alguna, adentrémonos, profundicemos, esta poderosa imagen.',
-'',
-'PATRONES ESTRUCTURALES DE IA A ROMPER:',
-'- Regla de tres: no agrupes todo de a tres ("consolar, edificar y transformar"). Usa uno, dos o cuatro elementos.',
-'- Paralelismo negativo "no es X, es Y": legítimo pero máximo dos en todo el texto, solo donde el contraste sea el punto.',
-'- Gerundios decorativos ("mostrando así la fidelidad divina"): córtalos y di la idea en oración propia.',
-'- Atribuciones vagas ("muchos estudiosos señalan"): o nombras al autor (Calvino, Trench, Lightfoot) o lo afirmas tú.',
-'- Raya larga (—): máximo una cada dos párrafos.',
-'- Simetría de párrafos: rompe la grilla de bloques parejos.',
-'- Anuncios de lo que viene ("veamos tres verdades", "pasemos al segundo punto"): transiciona con el contenido, una pregunta o silencio.',
-'- Resumen espejo al final: nunca repitas la lista.',
-'',
-'INTEGRIDAD: no inventas doctrina ni citas falsas. Conservas el contenido bíblico, las referencias y el argumento del texto original; solo transformas la VOZ para que sea la del pastor que lo va a predicar. La versificación y las citas de la Escritura se respetan.'
-].join('\n');
-
-const HUM_INT_TXT = {
-  suave:  'Intensidad SUAVE: respeta la estructura y la mayoría de las frases; corrige solo palabras prohibidas, tríos mecánicos, gerundios decorativos y empareja el burstiness sin reescribir a fondo.',
-  medio:  'Intensidad MEDIA: reescribe párrafo por párrafo con voz pastoral, pero mantené el orden de los puntos y las citas bíblicas del original.',
-  fuerte: 'Intensidad FUERTE: reescritura profunda. Máxima variación de ritmo, imperfecciones orales, arranques impredecibles y aplicación en segunda persona; conservá el texto bíblico y la doctrina, pero rehacé la prosa por completo.'
-};
-
-function openHM(){document.getElementById('hm').classList.add('open');setTimeout(()=>document.getElementById('hm-in').focus(),60);hmCount()}
-function closeHM(){document.getElementById('hm').classList.remove('open')}
-function hmSetInt(v){hmInt=v;document.querySelectorAll('#hm-int button').forEach(b=>b.classList.toggle('on',b.dataset.v===v))}
-function hmCount(){const t=document.getElementById('hm-in').value.trim();const w=t?t.split(/\s+/).length:0;document.getElementById('hm-cnt').textContent=w+' palabra'+(w===1?'':'s')}
-function hmClear(){document.getElementById('hm-in').value='';hmCount();document.getElementById('hm-out').innerHTML='<div class="placeholder"><div class="placeholder-ico">🕊️</div><div>Pegá tu texto a la izquierda y tocá <strong>Humanizar</strong>.</div></div>';document.getElementById('hm-copy').style.display='none';hmLastRaw=''}
-function copyHM(){if(!hmLastRaw)return;navigator.clipboard.writeText(hmLastRaw).then(()=>{const b=document.getElementById('hm-copy');const o=b.textContent;b.textContent='✓ Copiado';setTimeout(()=>b.textContent=o,1400)})}
-function hmSetOut(html){document.getElementById('hm-out').innerHTML=html}
-
-async function runHumanize(){
-  if(hmBusy)return;
-  const src=document.getElementById('hm-in').value.trim();
-  if(!src){hmSetOut('<div class="placeholder"><div class="placeholder-ico">✍️</div><div>Primero pegá el texto que querés humanizar.</div></div>');return}
-  if(!apiKey){hmSetOut('<div style="padding:6px"><div class="api-warn">⚠ Configurá tu API key de Claude (botón ⚙) para usar el humanizador.</div><button class="btn" onclick="openAM()">Configurar API key</button></div>');return}
-  const doble=document.getElementById('hm-double').checked;
-  const showAudit=document.getElementById('hm-showaudit').checked;
-  const runBtn=document.getElementById('hm-run');
-  hmBusy=true;runBtn.disabled=true;runBtn.textContent='Humanizando…';
-  document.getElementById('hm-copy').style.display='none';
-  const load=(m)=>hmSetOut('<div class="loading-msg"><div class="dots"><span></span><span></span><span></span></div>'+m+'</div>');
-  try{
-    const intTxt=HUM_INT_TXT[hmInt];
-    load(doble?'Pase 1 — dándole voz de púlpito…':'Reescribiendo con voz pastoral…');
-    const p1 = 'TEXTO A HUMANIZAR:\n"""\n'+src+'\n"""\n\n'+intTxt+'\n\n'+
-      'PASE 1 — Reescribe el texto entero aplicando la voz pastoral y todas las reglas del sistema. '+
-      'Devuelve SOLO el sermón reescrito, sin comentarios, sin títulos añadidos y sin comillas envolventes.';
-    let out = await claude(p1, HUM_SYS, 8000);
-
-    if(doble){
-      load('Pase 2 — auditoría estadística y ajuste anti-detección…');
-      const auditReq = showAudit
-        ? 'Después del sermón, agrega una línea con tres guiones (---) y luego una sección "## Auditoría anti-detección" con: (a) rango de largo de oraciones y confirmación del burstiness, (b) conteo de rayas largas, tríos y paralelismos "no es X, es Y", (c) las imperfecciones orales que usaste, (d) una estimación honesta de "probabilidad IA" percibida en porcentaje y qué rastro quedaría, si alguno.'
-        : 'Devuelve SOLO el sermón final, sin auditoría ni comentarios.';
-      const p2 = 'BORRADOR (pase 1):\n"""\n'+out+'\n"""\n\n'+
-        'PASE 2 — Auditoría estadística. Revisa y corrige SOLO lo que haga falta:\n'+
-        '1. Burstiness: en cada bloque de 5 oraciones debe haber una de menos de 6 palabras y una de más de 25. Si no, reescribe ese bloque.\n'+
-        '2. Aperturas: si dos párrafos seguidos empiezan con la misma estructura, cambia uno.\n'+
-        '3. Aplica los máximos: una raya larga cada dos párrafos, cero tríos mecánicos, máximo dos paralelismos "no es X, es Y".\n'+
-        '4. Confirma 2-3 imperfecciones orales bien ubicadas.\n'+
-        '5. Pregunta de control: "¿qué delata todavía que es IA?" y corrige solo eso.\n'+
-        'No toques lo que ya está limpio ni cambies la doctrina ni las citas bíblicas.\n\n'+auditReq;
-      out = await claude(p2, HUM_SYS, 8000);
-    }
-
-    let body=out, audit='';
-    const sep=out.search(/\n-{3,}\s*\n/);
-    if(showAudit && doble && sep>-1){ body=out.slice(0,sep).trim(); audit=out.slice(out.indexOf('\n',sep+1)).replace(/^\s*-{3,}\s*/,'').trim(); }
-    hmLastRaw=body;
-    let html='<div class="ai-out">'+md(body)+'</div>';
-    if(audit) html+='<div id="hm-audit"><div class="ai-out">'+md(audit)+'</div></div>';
-    hmSetOut(html);
-    document.getElementById('hm-copy').style.display='inline-block';
-  }catch(err){
-    hmSetOut('<div style="padding:14px;color:var(--t3);font-family:sans-serif">Error: '+xH(err.message)+'</div>');
-  }finally{
-    hmBusy=false;runBtn.disabled=false;runBtn.textContent='🕊️ Humanizar';
-  }
-}
-
 document.addEventListener('keydown',e=>{
   if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();openSM()}
-  if(e.key==='Escape'){closeSM();closeAM();closeHM()}
+  if(e.key==='Escape'){closeSM();closeAM()}
   if(e.key==='ArrowRight'&&!['INPUT','TEXTAREA'].includes(e.target.tagName))nextCh();
   if(e.key==='ArrowLeft'&&!['INPUT','TEXTAREA'].includes(e.target.tagName))prevCh();
 });
