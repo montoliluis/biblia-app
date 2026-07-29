@@ -1,6 +1,6 @@
 # Biblia de Estudio RVR1960
 
-App web de estudio bíblico (Reina-Valera 1960) en una sola página. Dos funciones principales:
+App web de estudio bíblico (Reina-Valera 1960) en una sola página:
 
 1. **Biblia a la vista + selector de libros y versículos**
    - Los 66 libros (Antiguo y Nuevo Testamento) en la barra lateral, con filtro de búsqueda.
@@ -8,15 +8,21 @@ App web de estudio bíblico (Reina-Valera 1960) en una sola página. Dos funcion
    - Búsqueda de texto en toda la Biblia (`Ctrl/Cmd + K`).
    - Tamaño de letra ajustable (A− / A+) y **temas de colores** (🎨): Original, Pergamino y Esmeralda.
 
-2. **Léxico Strong hebreo y griego** — *sin API key*
+2. **Interlineal hebreo y griego** — *sin API key*
+   - Clic en el **número de versículo** (o en cualquier palabra) → el texto original palabra por palabra: término hebreo/griego, transliteración, número de Strong y **morfología decodificada al castellano** (`verbo qal perfecto 3ª m. sing.`, `sustantivo nom. sing. m.`).
+   - Clic en cualquier palabra del original → su entrada en el léxico.
+   - Cubre 31.094 de los 31.102 versículos (99,97%). Los 8 que faltan son diferencias textuales conocidas: Juan 7:53, Romanos 16:25-27, 2 Corintios 13:13-14 y Filipenses 1:16-17.
+   - El Nuevo Testamento trae la glosa **en castellano**; el Antiguo, en inglés (es lo que hay en la fuente).
+
+3. **Léxico Strong hebreo y griego** — *sin API key*
    - Pestaña **Strong**: diccionario completo (8.674 entradas hebreas, 5.523 griegas) buscable por número (`H430`, `G26`), por palabra original (`אלהים`, `ἀγάπη`) o en castellano (`amor`, `pacto`, `gracia`).
    - Dato real y verificable, no generado por IA.
 
-3. **Referencias cruzadas reales** — *sin API key*
+4. **Referencias cruzadas reales** — *sin API key*
    - Clic en el **número de versículo** → hasta 12 referencias cruzadas clásicas, con su texto RVR, ordenadas por relevancia. Clic en cualquiera para saltar allí.
 
-4. **Capa de IA** (requiere API key de Claude)
-   - Clic en cualquier **palabra** → la IA identifica qué término original hay detrás y explica su peso teológico; el número de Strong que devuelve se **contrasta contra el diccionario real** y se muestra ese dato, no el que la IA recuerde.
+5. **Capa de IA** (requiere API key de Claude)
+   - Sobre el interlineal: la IA dice cuál palabra del original corresponde a la castellana que tocaste, y explica su peso teológico.
    - Botón de **síntesis teológica** sobre las referencias cruzadas.
    - Comentarios en el estilo de Calvino, Matthew Henry y Spurgeon.
 
@@ -63,5 +69,6 @@ Todo funciona en local, incluida la IA (el navegador habla directo con Anthropic
 | `data/strong-h.json` | 8.674 entradas del léxico hebreo | *A Concise Dictionary of the Words in the Hebrew Bible*, James Strong (1894) — edición digital de [OpenScriptures](https://github.com/openscriptures/strongs) | CC BY-SA |
 | `data/strong-g.json` | 5.523 entradas del léxico griego | *Dictionary of Greek Words*, James Strong (1890) — edición digital de [OpenScriptures](https://github.com/openscriptures/strongs) | CC BY-SA |
 | `data/xrefs.json` | Referencias cruzadas de 29.335 versículos | [OpenBible.info](https://www.openbible.info/labs/cross-references/) | CC BY |
+| `data/inter/0.json` … `65.json` | Interlineal: 447.384 palabras del original con Strong y morfología | TAHOT y TAGNT de [STEPBible](https://github.com/STEPBible/STEPBible-Data) | CC BY |
 
-Los tres archivos de `data/` se cargan **en diferido**: solo se descargan la primera vez que abrís la pestaña que los usa. El modelo de IA por defecto es `claude-sonnet-4-5-20250929`.
+Todo lo de `data/` se carga **en diferido**: los léxicos y las referencias cruzadas la primera vez que abrís su pestaña, y el interlineal un archivo por libro (el más pesado, Isaías, son 1,4 MB — 0,33 MB comprimido). El modelo de IA por defecto es `claude-sonnet-4-5-20250929`.

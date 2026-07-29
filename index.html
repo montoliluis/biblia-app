@@ -208,6 +208,17 @@
     .xr-ref{font-size:.76rem;font-weight:700;color:var(--gold);font-family:sans-serif;margin-bottom:3px}
     .xr-txt{font-size:.85rem;color:var(--t1);line-height:1.5}
     .ia-block{margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
+    /* ── Interlineal ── */
+    .iw{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;cursor:pointer;transition:.12s}
+    .iw:hover{border-color:var(--accent);background:var(--hover)}
+    .iw-top{display:flex;align-items:baseline;justify-content:space-between;gap:9px}
+    .iw-orig{font-size:1.32rem;font-weight:700;color:var(--gold);line-height:1.35}
+    .iw-str{font-size:.65rem;font-family:sans-serif;font-weight:700;color:var(--t3);letter-spacing:.05em;flex-shrink:0}
+    .iw-tr{font-size:.74rem;color:var(--accentH);font-style:italic;font-family:sans-serif}
+    .iw-gl{font-size:.88rem;color:var(--t1);line-height:1.4;margin-top:3px}
+    .iw-mo{font-size:.68rem;color:var(--t3);font-family:sans-serif;margin-top:3px}
+    .isup{background:var(--bg);border:1px dashed var(--border);border-radius:8px;padding:8px 11px;margin-bottom:9px;font-size:.78rem;color:var(--t3);font-family:sans-serif}
+    .ihint{font-size:.7rem;color:var(--t3);font-family:sans-serif;margin-bottom:10px;line-height:1.5}
     ::-webkit-scrollbar{width:5px}
     ::-webkit-scrollbar-track{background:transparent}
     ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
@@ -288,12 +299,12 @@
   </div>
   <div id="rp">
     <div class="ptabs">
-      <div class="ptab on" id="pt-lex" onclick="swTab('lex')">Léxico</div>
+      <div class="ptab on" id="pt-int" onclick="swTab('int')">Interlineal</div>
       <div class="ptab" id="pt-str" onclick="swTab('str')">Strong</div>
       <div class="ptab" id="pt-ref" onclick="swTab('ref')">Refs.</div>
       <div class="ptab" id="pt-com" onclick="swTab('com')">Coment.</div>
     </div>
-    <div class="pc on" id="pc-lex"><div class="placeholder"><div class="placeholder-ico">🔤</div><div>Haz clic en cualquier <strong>palabra</strong> del texto para analizar el original hebreo o griego</div></div></div>
+    <div class="pc on" id="pc-int"><div class="placeholder"><div class="placeholder-ico">🔤</div><div>Hacé clic en el <strong>número</strong> de un versículo para ver el original hebreo o griego, palabra por palabra.<br><br>Dato real, <strong>sin API key</strong>.</div></div></div>
     <div class="pc" id="pc-str">
       <div class="sh-row">
         <input type="text" id="st-inp" placeholder="H430, G26, אלהים, ἀγάπη…" oninput="debounceStrong(this.value)" />
@@ -425,7 +436,7 @@ function renderCh(){
       if(!clean)return xH(tok);
       return`<span class="w" data-w="${xA(clean)}" data-v="${vi}">${xH(tok)}</span>`;
     }).join('');
-    return`<div class="verse" id="vs${vi}"><span class="vnum" onclick="onVN(${vi})">${vi+1}</span>${words}<span class="vact"><span class="vabtn" onclick="doRef(${vi})">Refs</span><span class="vabtn" onclick="doCom(${vi})">Comentario</span></span></div>`;
+    return`<div class="verse" id="vs${vi}"><span class="vnum" onclick="onVN(${vi})">${vi+1}</span>${words}<span class="vact"><span class="vabtn" onclick="doInter(${vi})">Original</span><span class="vabtn" onclick="doRef(${vi})">Refs</span><span class="vabtn" onclick="doCom(${vi})">Comentario</span></span></div>`;
   }).join('');
   vc.querySelectorAll('.w').forEach(el=>el.addEventListener('click',onW));
   vc.scrollTop=0;
@@ -439,48 +450,14 @@ function xA(s){return s.replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
 // hay detrás del español y explicar su peso teológico); el número de Strong que
 // devuelve se contrasta contra el diccionario real y se muestra ese dato, no el
 // que la IA haya recordado de memoria.
-async function onW(e){
+// Tocar una palabra abre el interlineal real del versículo. La IA queda
+// detrás de un botón, para decir cuál del original corresponde a la castellana.
+function onW(e){
   const el=e.currentTarget;if(selWord)selWord.classList.remove('sel');selWord=el;el.classList.add('sel');
-  showRP();swTab('lex');
-  const word=el.dataset.w,vi=parseInt(el.dataset.v);
-  const vt=bible[bIdx].chapters[cIdx][vi];
-  const isNT=bIdx>=39,ref=`${bookName(bIdx)} ${cIdx+1}:${vi+1}`;
-  const head=`<div class="st-num" style="margin-bottom:10px">“${xH(word)}” · ${xH(ref)}</div>`;
-  if(!apiKey){
-    setPC('lex',head+`<div class="api-warn">⚠ La identificación de la palabra original necesita tu API key de Claude.</div>`
-      +`<button class="btn" onclick="openAM()">Configurar API key</button>`
-      +`<div class="src-note">Mientras tanto, la pestaña <strong>Strong</strong> funciona sin clave: tiene el diccionario hebreo y griego completo, buscable por número o por significado.</div>`);
-    return;
-  }
-  setPC('lex',head+`<div class="loading-msg"><div class="dots"><span></span><span></span><span></span></div>Identificando el original de “${xH(word)}”…</div>`);
-  try{
-    const sys=`Eres un experto en hebreo bíblico y griego koiné. Respondes en español, con rigor exegético y tono pastoral.`;
-    const prompt=`En ${ref} (RVR1960): "${vt}"\n\nLa palabra castellana a analizar es "${word}". El idioma original es ${isNT?'griego koiné':'hebreo bíblico'}.\n\nRespondé EXACTAMENTE en este formato. La primera línea debe ser solo el número de Strong de la palabra original que está detrás de "${word}", sin nada más:\n\nSTRONG: ${isNT?'G':'H'}0000\n\n### Morfología\n| Categoría | Análisis |\n|---|---|\n| Tipo | ... |\n| Raíz | ... |\n${isNT?'| Caso | ... |\n| Número | ... |\n| Género | ... |':'| Género | ... |\n| Número | ... |\n| Binyan (si es verbo) | ... |'}\n\n### En este versículo\n[2 párrafos sobre el aporte teológico de esta palabra aquí]\n\n### Ocurrencias clave\n[3 usos importantes en la Biblia, con su referencia]\n\nSi la palabra castellana no corresponde a ninguna palabra del original (por ejemplo, un artículo añadido por los traductores), poné STRONG: NINGUNO y explicá brevemente por qué.`;
-    const txt=await claude(prompt,sys,1800);
-
-    const m=txt.match(/STRONG:\s*([HG]\s*0*\d+)/i);
-    const body=txt.replace(/^\s*STRONG:.*$/im,'').trim();
-    let card='';
-    if(m){
-      try{
-        const entry=await strongEntry(m[1]);
-        if(entry){
-          card=stCard(entry,`<div style="margin-top:10px"><button class="btn2" style="margin:0" onclick="showStrong('${entry.code}')">Ver en el léxico →</button></div>`);
-        }
-      }catch(_){/* si el diccionario no carga, seguimos con la exposición de la IA */}
-    }
-    if(!card){
-      card=`<div class="src-note" style="margin-top:0;border-top:none;padding-top:0">No se pudo anclar esta palabra a una entrada del léxico Strong; abajo va solo la lectura de la IA.</div>`;
-    }
-    setPC('lex',head+card
-      +`<div class="ia-block"><div class="xr-hdr"><span class="xr-count">Exposición</span><span class="badge badge-ia">generado por IA</span></div><div class="ai-out">${md(body)}</div></div>`
-      +SRC_STRONG);
-  }catch(err){
-    setPC('lex',head+`<div style="padding:18px;color:var(--t3);font-family:sans-serif">Error: ${xH(err.message)}</div>`);
-  }
+  doInter(parseInt(el.dataset.v),el.dataset.w);
 }
 
-function onVN(vi){doRef(vi)}
+function onVN(vi){doInter(vi)}
 
 // Híbrido: las referencias salen del dataset abierto (instantáneas, sin clave).
 // La IA queda detrás de un botón, solo para la síntesis teológica.
@@ -566,6 +543,153 @@ async function claude(user,system,maxTok=2048){
   if(!d.content||!d.content[0])throw new Error(d.error?.message||'Respuesta vacía de la API');
   return d.content[0].text;
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+   INTERLINEAL — texto original hebreo y griego, palabra por palabra, con
+   número de Strong y morfología. Datos de STEPBible (CC BY), un archivo
+   por libro que se baja solo cuando abrís ese libro.
+   ══════════════════════════════════════════════════════════════════════ */
+const INTER={};
+async function getInter(b){
+  if(INTER[b])return INTER[b];
+  if(!loading['i'+b]){
+    loading['i'+b]=fetch(`data/inter/${b}.json`).then(r=>{
+      if(!r.ok)throw new Error('HTTP '+r.status);return r.json();
+    }).then(j=>{INTER[b]=j;return j}).catch(e=>{delete loading['i'+b];throw new Error('No se pudo cargar el interlineal de este libro ('+e.message+')')});
+  }
+  return loading['i'+b];
+}
+
+// ── Morfología a castellano ──
+const G_POS={N:'sustantivo',V:'verbo',A:'adjetivo',T:'artículo',P:'pronombre',R:'pron. relativo',
+  D:'demostrativo',K:'pron. correlativo',I:'pron. interrogativo',X:'pron. indefinido',
+  Q:'correlativo',F:'pron. reflexivo',S:'posesivo',C:'pron. recíproco',ADV:'adverbio',
+  CONJ:'conjunción',PREP:'preposición',PRT:'partícula',INJ:'interjección',COND:'condicional',
+  ARAM:'arameo',HEB:'hebreo',N_:'sustantivo'};
+const G_CASO={N:'nom.',G:'gen.',D:'dat.',A:'ac.',V:'voc.'},G_NUM={S:'sing.',P:'pl.'},
+  G_GEN={M:'m.',F:'f.',N:'n.'},
+  G_TIEMPO={P:'presente',I:'imperfecto',F:'futuro',A:'aoristo',X:'perfecto',R:'perfecto',Y:'pluscuamp.',L:'pluscuamp.',2:''},
+  G_VOZ={A:'activa',M:'media',P:'pasiva',E:'media/pasiva',D:'deponente',O:'media/pasiva'},
+  G_MODO={I:'indicativo',S:'subjuntivo',O:'optativo',M:'imperativo',D:'imperativo',N:'infinitivo',P:'participio'};
+const H_POS={A:'adjetivo',C:'conjunción',D:'adverbio',N:'sustantivo',P:'pronombre',R:'preposición',
+  S:'sufijo',T:'partícula',V:'verbo'};
+const H_STEM={q:'qal',N:'nifal',p:'piel',P:'pual',h:'hifil',H:'hofal',t:'hitpael',o:'polel',
+  O:'polal',r:'hitpolel',v:'hitpael',i:'tifel',u:'hotpaal'};
+const H_ASP={p:'perfecto',q:'perf. consec.',i:'imperfecto',w:'imperf. consec.',h:'cohortativo',
+  j:'jusivo',v:'imperativo',a:'inf. absoluto',c:'inf. constructo',r:'participio',s:'part. pasivo'};
+const H_GEN={m:'m.',f:'f.',b:'m./f.',c:'com.'},H_NUM={s:'sing.',p:'pl.',d:'dual'},
+  H_EST={a:'abs.',c:'constr.',d:'det.'},
+  H_PART={d:'artículo',n:'negación',o:'marca de objeto',i:'interrogativa',a:'afirmación',
+    e:'exhortación',j:'interjección',m:'demostrativa',r:'relativo'};
+
+function morphES(code,greek){
+  if(!code)return'';
+  try{
+    if(greek){
+      const p=code.split('-'),pos=G_POS[p[0]]||G_POS[p[0]?.replace(/\d/g,'')]||p[0];
+      if(p[0]==='V'&&p[1]){
+        const t=[G_TIEMPO[p[1][0]],G_VOZ[p[1][1]],G_MODO[p[1][2]]].filter(Boolean).join(' ');
+        const pn=p[2]?` ${p[2][0]}ª ${G_NUM[p[2][1]]||''}`:'';
+        return('verbo '+t+pn).trim();
+      }
+      if(p[1]&&p[1].length>=2){
+        const d=[G_CASO[p[1][0]],G_NUM[p[1][1]],G_GEN[p[1][2]]].filter(Boolean).join(' ');
+        return(pos+' '+d).trim();
+      }
+      return pos;
+    }
+    // Hebreo: "HTd/Ncmpa" → los morfemas van separados por barra.
+    return code.replace(/^H/,'').split('/').map(seg=>{
+      if(!seg)return'';
+      const c=seg[0];
+      if(c==='V'){
+        const t=[H_STEM[seg[1]],H_ASP[seg[2]]].filter(Boolean).join(' ');
+        const rest=seg.slice(3);
+        let pgn='';
+        if(/^\d/.test(rest))pgn=` ${rest[0]}ª ${H_GEN[rest[1]]||''} ${H_NUM[rest[2]]||''}`;
+        else if(rest)pgn=` ${H_GEN[rest[0]]||''} ${H_NUM[rest[1]]||''}`;
+        return('verbo '+t+pgn).replace(/\s+/g,' ').trim();
+      }
+      if(c==='N'){
+        const r=seg.slice(2);
+        return(seg[1]==='p'?'nombre propio':'sustantivo')+' '+
+          [H_GEN[r[0]],H_NUM[r[1]],H_EST[r[2]]].filter(Boolean).join(' ');
+      }
+      if(c==='T')return H_PART[seg[1]]||'partícula';
+      if(c==='S')return'sufijo '+(seg.slice(2)?`${seg[2]}ª ${H_GEN[seg[3]]||''} ${H_NUM[seg[4]]||''}`:'').trim();
+      if(c==='A'||c==='P'){
+        const r=seg.slice(2);
+        return(H_POS[c]||c)+' '+[H_GEN[r[0]],H_NUM[r[1]],H_EST[r[2]]].filter(Boolean).join(' ');
+      }
+      return H_POS[c]||seg;
+    }).filter(Boolean).join(' + ').replace(/\s+/g,' ').trim();
+  }catch(_){return code}
+}
+
+let interCtx=null;
+
+async function doInter(vi,word){
+  showRP();swTab('int');
+  const ref=`${bookName(bIdx)} ${cIdx+1}:${vi+1}`,greek=bIdx>=39;
+  const vt=bible[bIdx].chapters[cIdx][vi];
+  interCtx={ref,vt,vi,word};
+  document.querySelectorAll('.verse').forEach(el=>el.classList.remove('vhl'));
+  const vel=document.getElementById('vs'+vi);
+  if(vel){vel.classList.add('vhl');setTimeout(()=>vel.classList.remove('vhl'),2200)}
+  const head=`<div class="vref-card" style="cursor:default"><div class="vref-ref">${xH(ref)}</div><div class="vref-txt">"${xH(vt)}"</div></div>`;
+  setPC('int',head+`<div class="loading-msg"><div class="dots"><span></span><span></span><span></span></div>Cargando ${greek?'griego':'hebreo'}…</div>`);
+  try{
+    const d=await getInter(bIdx);
+    const ws=d[String(cIdx+1)]?.[String(vi+1)];
+    if(!ws){
+      setPC('int',head+`<div class="placeholder"><div class="placeholder-ico">∅</div><div>Este versículo no aparece en el texto original de STEPBible.<br><br>Suele pasar donde las ediciones críticas numeran distinto o consideran el pasaje añadido posteriormente (por ejemplo Juan 7:53 o el final de Romanos).</div></div>`+SRC_INTER);
+      return;
+    }
+    const sup=d[String(cIdx+1)]?.['0'];
+    const supH=(vi===0&&sup)?`<div class="isup">Encabezado: ${xH(sup.map(w=>w[4]).join(' '))}</div>`:'';
+    const rows=ws.map(w=>{
+      const [orig,tr,st,mo,gl]=w;
+      const m=morphES(mo,greek);
+      return`<div class="iw"${st?` onclick="showStrong('${st}')"`:''}>
+        <div class="iw-top"><span class="iw-orig"${greek?'':' dir="rtl"'}>${xH(orig)}</span>${st?`<span class="iw-str">${st}</span>`:''}</div>
+        ${tr?`<div class="iw-tr">${xH(tr)}</div>`:''}
+        ${gl?`<div class="iw-gl">${xH(gl)}</div>`:''}
+        ${m?`<div class="iw-mo" title="${xA(mo)}">${xH(m)}</div>`:''}
+      </div>`;
+    }).join('');
+    const hint=greek?'':'<div class="ihint">Las glosas del Antiguo Testamento vienen en inglés en la fuente; el Nuevo Testamento ya está en castellano.</div>';
+    setPC('int',head
+      +`<div class="xr-hdr"><span class="xr-count">${ws.length} palabra${ws.length!==1?'s':''} · ${greek?'griego':'hebreo'}</span><span class="badge badge-real">dato real</span></div>`
+      +supH+hint+rows
+      +`<div style="text-align:center;margin-top:14px"><button class="btn" onclick="interIA()">✨ ${word?`¿Cuál corresponde a “${xH(word)}”?`:'Explicar con IA'}</button></div>`
+      +`<div id="int-ia"></div>`+SRC_INTER);
+  }catch(err){
+    setPC('int',head+`<div style="padding:18px;color:var(--t3);font-family:sans-serif">${xH(err.message)}</div>`);
+  }
+}
+
+// Capa IA sobre el interlineal: el dato duro ya está en pantalla; la IA
+// explica y, si se tocó una palabra castellana, dice cuál del original le toca.
+async function interIA(){
+  if(!interCtx)return;
+  const box=document.getElementById('int-ia');
+  if(!box)return;
+  if(!apiKey){box.innerHTML=`<div class="ia-block"><div class="api-warn">⚠ Configurá tu API key para la explicación. El interlineal de arriba funciona sin clave.</div><button class="btn" onclick="openAM()">Configurar API key</button></div>`;return}
+  box.innerHTML=`<div class="ia-block"><div class="loading-msg"><div class="dots"><span></span><span></span><span></span></div>Analizando…</div></div>`;
+  try{
+    const greek=bIdx>=39;
+    const ws=INTER[bIdx][String(cIdx+1)][String(interCtx.vi+1)];
+    const lista=ws.map((w,i)=>`${i+1}. ${w[0]} (${w[1]}) ${w[2]} — ${w[4]}`).join('\n');
+    const sys=`Eres un experto en ${greek?'griego koiné':'hebreo bíblico'}. Respondés en español rioplatense, con rigor exegético y tono pastoral.`;
+    const prompt=`${interCtx.ref} (RVR1960): "${interCtx.vt}"\n\nTexto original palabra por palabra:\n${lista}\n\n`
+      +(interCtx.word
+        ? `El lector tocó la palabra castellana "${interCtx.word}". Respondé:\n\n### Cuál es\nDecí qué palabra del original de la lista corresponde a "${interCtx.word}" (o aclarás si no corresponde a ninguna porque la añadieron los traductores).\n\n### Qué aporta\n[2 párrafos sobre el peso teológico de esa palabra acá]`
+        : `### Lectura del original\n[2 párrafos: qué muestra el original que la traducción castellana no deja ver]\n\n### Para la predicación\n[1 párrafo]`);
+    const txt=await claude(prompt,sys,1400);
+    box.innerHTML=`<div class="ia-block"><div class="xr-hdr"><span class="xr-count">Análisis</span><span class="badge badge-ia">generado por IA</span></div><div class="ai-out">${md(txt)}</div></div>`;
+  }catch(err){box.innerHTML=`<div class="ia-block" style="color:var(--t3);font-family:sans-serif;font-size:.83rem">${xH(err.message)}</div>`}
+}
+const SRC_INTER='<div class="src-note">Texto original etiquetado de <strong>STEPBible</strong> (TAHOT/TAGNT, CC BY): palabra, número de Strong y morfología. Dato real, no generado por IA.</div>';
 
 /* ─────────── Buscador del léxico Strong (instantáneo, sin API key) ───────────
    El léxico de Strong está en inglés. Sin este puente, buscar "amor" devolvía
@@ -721,7 +845,7 @@ function md(raw){
   flushP();flushL();flushT();return out.join('\n');
 }
 
-function swTab(t){['lex','str','ref','com'].forEach(x=>{document.getElementById('pt-'+x).classList.toggle('on',x===t);document.getElementById('pc-'+x).classList.toggle('on',x===t)})}
+function swTab(t){['int','str','ref','com'].forEach(x=>{document.getElementById('pt-'+x).classList.toggle('on',x===t);document.getElementById('pc-'+x).classList.toggle('on',x===t)})}
 function setPC(t,html){document.getElementById('pc-'+t).innerHTML=html}
 function showRP(){document.getElementById('rp').classList.remove('closed');document.getElementById('rp-btn').classList.add('on')}
 function togRP(){const rp=document.getElementById('rp');const open=!rp.classList.contains('closed');rp.classList.toggle('closed',open);document.getElementById('rp-btn').classList.toggle('on',!open)}
