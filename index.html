@@ -219,6 +219,8 @@
     .iw-mo{font-size:.68rem;color:var(--t3);font-family:sans-serif;margin-top:3px}
     .isup{background:var(--bg);border:1px dashed var(--border);border-radius:8px;padding:8px 11px;margin-bottom:9px;font-size:.78rem;color:var(--t3);font-family:sans-serif}
     .ihint{font-size:.7rem;color:var(--t3);font-family:sans-serif;margin-bottom:10px;line-height:1.5}
+    .lang-tog{display:inline-block;font-size:.63rem;font-weight:700;font-family:sans-serif;letter-spacing:.07em;padding:2px 8px;border-radius:9px;cursor:pointer;background:var(--hover);color:var(--t2);border:1px solid var(--border);transition:.12s;user-select:none}
+    .lang-tog:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accentH)}
     ::-webkit-scrollbar{width:5px}
     ::-webkit-scrollbar-track{background:transparent}
     ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
@@ -344,6 +346,22 @@ async function getData(name){
   return loading[name];
 }
 
+// El español es traducción nuestra del original inglés; si el archivo todavía no
+// está o falla, se cae al inglés en vez de romper la pantalla.
+async function getDataSoft(name){
+  try{return await getData(name)}catch(_){return null}
+}
+let lexES=localStorage.getItem('bk_lexes')!=='0';
+function togLexES(){
+  lexES=!lexES;localStorage.setItem('bk_lexes',lexES?'1':'0');
+  const q=document.getElementById('st-inp');
+  if(q&&q.value.trim())doStrong(q.value);
+  if(interCtx)doInter(interCtx.vi,interCtx.word);
+}
+function esToggle(){
+  return`<span class="lang-tog" onclick="togLexES()" title="Cambiar entre la traducción al español y el texto original en inglés">${lexES?'ES':'EN'}</span>`;
+}
+
 // Un número de Strong ("H430" / "g26" / "H0430") → clave canónica del diccionario.
 function normStrong(s){
   const m=String(s).trim().match(/^([HhGg])0*(\d+)/);
@@ -353,7 +371,17 @@ async function strongEntry(code){
   const k=normStrong(code);
   if(!k)return null;
   const d=await getData(k[0]==='H'?'strong-h':'strong-g');
-  return d[k]?{code:k,...d[k]}:null;
+  if(!d[k])return null;
+  const e={code:k,...d[k]};
+  if(lexES){
+    const es=await getDataSoft('strong-es');
+    if(es&&es[k]){
+      if(es[k].d)e.d=es[k].d;
+      if(es[k].v)e.v=es[k].v;
+      e.es=true;
+    }
+  }
+  return e;
 }
 
 function stCard(e,extra=''){
@@ -369,7 +397,7 @@ function stCard(e,extra=''){
     ${extra}
   </div>`;
 }
-const SRC_STRONG='<div class="src-note">Léxico de James Strong (1890/1894), edición digital de <strong>OpenScriptures</strong> — dominio público, CC BY-SA. Dato verificable, no generado por IA.</div>';
+const SRC_STRONG='<div class="src-note">Léxico de James Strong (1890/1894), edición digital de <strong>OpenScriptures</strong> — dominio público, CC BY-SA. La entrada es dato verificable; la <strong>traducción al español es nuestra</strong> — con el botón ES/EN ves el original en inglés.</div>';
 const SRC_XREF='<div class="src-note">Referencias cruzadas de <strong>OpenBible.info</strong> (CC BY), ordenadas por relevancia según votos de la comunidad. Dato real, no generado por IA.</div>';
 
 let apiKey=localStorage.getItem('bk_api')||'';
@@ -645,10 +673,13 @@ async function doInter(vi,word){
       setPC('int',head+`<div class="placeholder"><div class="placeholder-ico">∅</div><div>Este versículo no aparece en el texto original de STEPBible.<br><br>Suele pasar donde las ediciones críticas numeran distinto o consideran el pasaje añadido posteriormente (por ejemplo Juan 7:53 o el final de Romanos).</div></div>`+SRC_INTER);
       return;
     }
+    // El NT ya viene glosado en castellano en la fuente; el AT lo traducimos.
+    const gEs=(!greek&&lexES)?await getDataSoft('gloss-es'):null;
+    const tr_=g=>(gEs&&gEs[g])||g;
     const sup=d[String(cIdx+1)]?.['0'];
-    const supH=(vi===0&&sup)?`<div class="isup">Encabezado: ${xH(sup.map(w=>w[4]).join(' '))}</div>`:'';
+    const supH=(vi===0&&sup)?`<div class="isup">Encabezado: ${xH(sup.map(w=>tr_(w[4])).join(' '))}</div>`:'';
     const rows=ws.map(w=>{
-      const [orig,tr,st,mo,gl]=w;
+      const [orig,tr,st,mo,gl0]=w,gl=tr_(gl0);
       const m=morphES(mo,greek);
       return`<div class="iw"${st?` onclick="showStrong('${st}')"`:''}>
         <div class="iw-top"><span class="iw-orig"${greek?'':' dir="rtl"'}>${xH(orig)}</span>${st?`<span class="iw-str">${st}</span>`:''}</div>
@@ -657,9 +688,9 @@ async function doInter(vi,word){
         ${m?`<div class="iw-mo" title="${xA(mo)}">${xH(m)}</div>`:''}
       </div>`;
     }).join('');
-    const hint=greek?'':'<div class="ihint">Las glosas del Antiguo Testamento vienen en inglés en la fuente; el Nuevo Testamento ya está en castellano.</div>';
+    const hint=(greek||gEs)?'':'<div class="ihint">Glosas en inglés, como vienen en la fuente.</div>';
     setPC('int',head
-      +`<div class="xr-hdr"><span class="xr-count">${ws.length} palabra${ws.length!==1?'s':''} · ${greek?'griego':'hebreo'}</span><span class="badge badge-real">dato real</span></div>`
+      +`<div class="xr-hdr"><span class="xr-count">${ws.length} palabra${ws.length!==1?'s':''} · ${greek?'griego':'hebreo'}</span><span>${greek?'':esToggle()+' '}<span class="badge badge-real">dato real</span></span></div>`
       +supH+hint+rows
       +`<div style="text-align:center;margin-top:14px"><button class="btn" onclick="interIA()">✨ ${word?`¿Cuál corresponde a “${xH(word)}”?`:'Explicar con IA'}</button></div>`
       +`<div id="int-ia"></div>`+SRC_INTER);
@@ -743,7 +774,7 @@ async function doStrong(q){
     const code=normStrong(q);
     if(code&&/^[HhGg]\s*0*\d+$/.test(q.replace(/\s/g,''))){
       const e=await strongEntry(code);
-      stOut(e?stCard(e)+SRC_STRONG:`<div class="placeholder"><div class="placeholder-ico">∅</div><div>No existe la entrada <strong>${xH(code)}</strong>.</div></div>`);
+      stOut(e?`<div class="xr-hdr"><span class="xr-count">Entrada ${e.code}</span>${esToggle()}</div>`+stCard(e)+SRC_STRONG:`<div class="placeholder"><div class="placeholder-ico">∅</div><div>No existe la entrada <strong>${xH(code)}</strong>.</div></div>`);
       return;
     }
     const [h,g]=await Promise.all([getData('strong-h'),getData('strong-g')]);
@@ -772,7 +803,7 @@ async function doStrong(q){
     if(!res.length){stOut(`<div class="placeholder"><div class="placeholder-ico">∅</div><div>Sin resultados para <strong>${xH(q)}</strong>.<br><br>El léxico de Strong está <strong>en inglés</strong>: probá con el término inglés (<em>love</em>, <em>covenant</em>) o directamente con el número (H430, G26).</div></div>`);return}
     res.sort((a,b)=>b.s-a.s);
     const shown=res.slice(0,25);
-    stOut(`<div class="xr-hdr"><span class="xr-count">${res.length>25?`25 de ${res.length}`:`${res.length}`} resultado${res.length!==1?'s':''}</span><span class="badge badge-real">dato real</span></div>`
+    stOut(`<div class="xr-hdr"><span class="xr-count">${res.length>25?`25 de ${res.length}`:`${res.length}`} resultado${res.length!==1?'s':''}</span><span>${esToggle()} <span class="badge badge-real">dato real</span></span></div>`
       +nota+shown.map(r=>stCard(r.e)).join('')+SRC_STRONG);
   }catch(err){
     stOut(`<div style="padding:18px;color:var(--t3);font-family:sans-serif">${xH(err.message)}</div>`);
