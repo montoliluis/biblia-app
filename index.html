@@ -184,6 +184,30 @@
     #boot-msg{font-size:.9rem;color:var(--t2);font-family:sans-serif;text-align:center;max-width:400px;line-height:1.6}
     .bar-wrap{width:280px;height:3px;background:var(--border);border-radius:2px;overflow:hidden}
     #bar{height:100%;background:var(--accent);border-radius:2px;width:0;transition:width .3s}
+    /* ── Datos abiertos: léxico Strong y referencias cruzadas ── */
+    .src-note{font-size:.68rem;color:var(--t3);font-family:sans-serif;line-height:1.45;margin-top:16px;padding-top:10px;border-top:1px solid var(--border)}
+    .badge{display:inline-block;font-size:.63rem;font-weight:700;font-family:sans-serif;text-transform:uppercase;letter-spacing:.07em;padding:2px 7px;border-radius:9px;vertical-align:middle}
+    .badge-real{background:rgba(139,195,74,.16);color:var(--green);border:1px solid rgba(139,195,74,.4)}
+    .badge-ia{background:var(--accentL);color:var(--accentH);border:1px solid var(--accent)}
+    .sh-row{display:flex;gap:8px;margin-bottom:12px}
+    .sh-row input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:8px 11px;color:var(--t1);font-size:.86rem;font-family:sans-serif;outline:none}
+    .sh-row input:focus{border-color:var(--accent)}
+    .sh-row input::placeholder{color:var(--t3)}
+    .st-card{background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:14px 15px;margin-bottom:12px}
+    .st-num{font-size:.68rem;font-weight:700;font-family:sans-serif;letter-spacing:.08em;color:var(--t3);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+    .st-lemma{font-size:1.9rem;font-weight:700;color:var(--gold);line-height:1.2;margin-bottom:2px}
+    .st-xlit{font-size:.88rem;color:var(--accentH);font-style:italic;font-family:sans-serif;margin-bottom:2px}
+    .st-pron{font-size:.76rem;color:var(--t3);font-family:sans-serif;margin-bottom:10px}
+    .st-def{font-size:.87rem;line-height:1.65;color:var(--t1);margin-bottom:9px}
+    .st-meta{font-size:.79rem;line-height:1.55;color:var(--t2);font-family:sans-serif;padding-top:8px;border-top:1px solid var(--border)}
+    .st-meta b{color:var(--t3);font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:2px}
+    .xr-hdr{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:11px}
+    .xr-count{font-size:.7rem;color:var(--t3);font-family:sans-serif}
+    .xr{padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:7px;margin-bottom:7px;cursor:pointer;transition:.12s}
+    .xr:hover{border-color:var(--accent);background:var(--hover)}
+    .xr-ref{font-size:.76rem;font-weight:700;color:var(--gold);font-family:sans-serif;margin-bottom:3px}
+    .xr-txt{font-size:.85rem;color:var(--t1);line-height:1.5}
+    .ia-block{margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
     ::-webkit-scrollbar{width:5px}
     ::-webkit-scrollbar-track{background:transparent}
     ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
@@ -202,7 +226,7 @@
 <div id="am">
   <div id="am-box">
     <h2>⚡ Activar IA (Claude)</h2>
-    <p>La IA potencia el análisis morfológico hebreo/griego, los comentarios de Calvino, Henry y Spurgeon, y las referencias cruzadas. Sin clave funciona la lectura y la búsqueda.</p>
+    <p><strong>Sin clave ya funciona bastante:</strong> la lectura, la búsqueda, el diccionario Strong completo (hebreo y griego) y las referencias cruzadas reales. La clave agrega la capa de IA: identificar la palabra original detrás de cada término, la síntesis teológica y los comentarios de Calvino, Henry y Spurgeon.</p>
     <input type="password" id="am-inp" placeholder="sk-ant-api03-…" />
     <div>
       <button class="btn" onclick="saveKey()">Guardar y activar</button>
@@ -265,10 +289,17 @@
   <div id="rp">
     <div class="ptabs">
       <div class="ptab on" id="pt-lex" onclick="swTab('lex')">Léxico</div>
-      <div class="ptab" id="pt-ref" onclick="swTab('ref')">Refs. Cruzadas</div>
-      <div class="ptab" id="pt-com" onclick="swTab('com')">Comentarios</div>
+      <div class="ptab" id="pt-str" onclick="swTab('str')">Strong</div>
+      <div class="ptab" id="pt-ref" onclick="swTab('ref')">Refs.</div>
+      <div class="ptab" id="pt-com" onclick="swTab('com')">Coment.</div>
     </div>
     <div class="pc on" id="pc-lex"><div class="placeholder"><div class="placeholder-ico">🔤</div><div>Haz clic en cualquier <strong>palabra</strong> del texto para analizar el original hebreo o griego</div></div></div>
+    <div class="pc" id="pc-str">
+      <div class="sh-row">
+        <input type="text" id="st-inp" placeholder="H430, G26, אלהים, ἀγάπη…" oninput="debounceStrong(this.value)" />
+      </div>
+      <div id="st-out"><div class="placeholder"><div class="placeholder-ico">🔎</div><div>Buscá por <strong>número de Strong</strong> (H430, G26) o por la palabra original (אלהים, ἀγάπη).<br><br>Diccionario hebreo y griego completo, <strong>sin API key</strong>. Las definiciones son las de Strong, <strong>en inglés</strong>.</div></div></div>
+    </div>
     <div class="pc" id="pc-ref"><div class="placeholder"><div class="placeholder-ico">🔗</div><div>Haz clic en el <strong>número</strong> de un versículo para ver sus referencias cruzadas</div></div></div>
     <div class="pc" id="pc-com"><div class="placeholder"><div class="placeholder-ico">📜</div><div>Haz clic en el <strong>número</strong> de un versículo para los comentarios de Calvino, Henry y Spurgeon</div></div></div>
   </div>
@@ -277,7 +308,59 @@
 <script>
 const BKS=[{n:'Génesis',t:'AT',c:50},{n:'Éxodo',t:'AT',c:40},{n:'Levítico',t:'AT',c:27},{n:'Números',t:'AT',c:36},{n:'Deuteronomio',t:'AT',c:34},{n:'Josué',t:'AT',c:24},{n:'Jueces',t:'AT',c:21},{n:'Rut',t:'AT',c:4},{n:'1 Samuel',t:'AT',c:31},{n:'2 Samuel',t:'AT',c:24},{n:'1 Reyes',t:'AT',c:22},{n:'2 Reyes',t:'AT',c:25},{n:'1 Crónicas',t:'AT',c:29},{n:'2 Crónicas',t:'AT',c:36},{n:'Esdras',t:'AT',c:10},{n:'Nehemías',t:'AT',c:13},{n:'Ester',t:'AT',c:10},{n:'Job',t:'AT',c:42},{n:'Salmos',t:'AT',c:150},{n:'Proverbios',t:'AT',c:31},{n:'Eclesiastés',t:'AT',c:12},{n:'Cantares',t:'AT',c:8},{n:'Isaías',t:'AT',c:66},{n:'Jeremías',t:'AT',c:52},{n:'Lamentaciones',t:'AT',c:5},{n:'Ezequiel',t:'AT',c:48},{n:'Daniel',t:'AT',c:12},{n:'Oseas',t:'AT',c:14},{n:'Joel',t:'AT',c:3},{n:'Amós',t:'AT',c:9},{n:'Abdías',t:'AT',c:1},{n:'Jonás',t:'AT',c:4},{n:'Miqueas',t:'AT',c:7},{n:'Nahúm',t:'AT',c:3},{n:'Habacuc',t:'AT',c:3},{n:'Sofonías',t:'AT',c:3},{n:'Hageo',t:'AT',c:2},{n:'Zacarías',t:'AT',c:14},{n:'Malaquías',t:'AT',c:4},{n:'Mateo',t:'NT',c:28},{n:'Marcos',t:'NT',c:16},{n:'Lucas',t:'NT',c:24},{n:'Juan',t:'NT',c:21},{n:'Hechos',t:'NT',c:28},{n:'Romanos',t:'NT',c:16},{n:'1 Corintios',t:'NT',c:16},{n:'2 Corintios',t:'NT',c:13},{n:'Gálatas',t:'NT',c:6},{n:'Efesios',t:'NT',c:6},{n:'Filipenses',t:'NT',c:4},{n:'Colosenses',t:'NT',c:4},{n:'1 Tesalonicenses',t:'NT',c:5},{n:'2 Tesalonicenses',t:'NT',c:3},{n:'1 Timoteo',t:'NT',c:6},{n:'2 Timoteo',t:'NT',c:4},{n:'Tito',t:'NT',c:3},{n:'Filemón',t:'NT',c:1},{n:'Hebreos',t:'NT',c:13},{n:'Santiago',t:'NT',c:5},{n:'1 Pedro',t:'NT',c:5},{n:'2 Pedro',t:'NT',c:3},{n:'1 Juan',t:'NT',c:5},{n:'2 Juan',t:'NT',c:1},{n:'3 Juan',t:'NT',c:1},{n:'Judas',t:'NT',c:1},{n:'Apocalipsis',t:'NT',c:22}];
 
-let bible=null,bIdx=0,cIdx=0,selWord=null,srchTimer=null;
+let bible=null,bIdx=0,cIdx=0,selWord=null,srchTimer=null,stTimer=null;
+
+/* ══════════════════════════════════════════════════════════════════════
+   DATOS ABIERTOS — el lado "duro" del híbrido.
+   Léxico Strong (OpenScriptures, CC BY-SA) y referencias cruzadas
+   (OpenBible.info, CC BY). Son datos reales y verificables: cargan una
+   sola vez, funcionan sin conexión y NO necesitan API key. La IA se usa
+   encima de esto para explicar, nunca para inventar el dato.
+   ══════════════════════════════════════════════════════════════════════ */
+const DATA={'strong-h':null,'strong-g':null,'xrefs':null};
+const DATA_ERR={};
+const loading={};
+async function getData(name){
+  if(DATA[name])return DATA[name];
+  if(DATA_ERR[name])throw new Error(DATA_ERR[name]);
+  if(!loading[name]){
+    loading[name]=fetch(`data/${name}.json`).then(r=>{
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      return r.json();
+    }).then(j=>{DATA[name]=j;return j})
+      .catch(e=>{DATA_ERR[name]=`No se pudo cargar data/${name}.json (${e.message})`;delete loading[name];throw new Error(DATA_ERR[name])});
+  }
+  return loading[name];
+}
+
+// Un número de Strong ("H430" / "g26" / "H0430") → clave canónica del diccionario.
+function normStrong(s){
+  const m=String(s).trim().match(/^([HhGg])0*(\d+)/);
+  return m?m[1].toUpperCase()+m[2]:null;
+}
+async function strongEntry(code){
+  const k=normStrong(code);
+  if(!k)return null;
+  const d=await getData(k[0]==='H'?'strong-h':'strong-g');
+  return d[k]?{code:k,...d[k]}:null;
+}
+
+function stCard(e,extra=''){
+  const heb=e.code[0]==='H';
+  return`<div class="st-card">
+    <div class="st-num"><span>${heb?'Hebreo':'Griego'} · Strong ${e.code}</span><span class="badge badge-real">dato real</span></div>
+    <div class="st-lemma"${heb?' dir="rtl"':''}>${xH(e.l||'—')}</div>
+    ${e.x?`<div class="st-xlit">${xH(e.x)}</div>`:''}
+    ${e.p?`<div class="st-pron">pronunciación: ${xH(e.p)}</div>`:''}
+    ${e.d?`<div class="st-def">${xH(e.d)}</div>`:''}
+    ${e.v?`<div class="st-meta"><b>Derivación</b>${xH(e.v)}</div>`:''}
+    ${e.k?`<div class="st-meta"><b>Se traduce como (KJV)</b>${xH(e.k)}</div>`:''}
+    ${extra}
+  </div>`;
+}
+const SRC_STRONG='<div class="src-note">Léxico de James Strong (1890/1894), edición digital de <strong>OpenScriptures</strong> — dominio público, CC BY-SA. Dato verificable, no generado por IA.</div>';
+const SRC_XREF='<div class="src-note">Referencias cruzadas de <strong>OpenBible.info</strong> (CC BY), ordenadas por relevancia según votos de la comunidad. Dato real, no generado por IA.</div>';
+
 let apiKey=localStorage.getItem('bk_api')||'';
 let fs=parseFloat(localStorage.getItem('bk_fs')||'1.06');
 let theme=localStorage.getItem('bk_theme')||'warm';
@@ -352,40 +435,98 @@ function renderCh(){
 function xH(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 function xA(s){return s.replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
 
+// Híbrido: la IA hace lo que sabe hacer bien (identificar qué palabra original
+// hay detrás del español y explicar su peso teológico); el número de Strong que
+// devuelve se contrasta contra el diccionario real y se muestra ese dato, no el
+// que la IA haya recordado de memoria.
 async function onW(e){
   const el=e.currentTarget;if(selWord)selWord.classList.remove('sel');selWord=el;el.classList.add('sel');
   showRP();swTab('lex');
   const word=el.dataset.w,vi=parseInt(el.dataset.v);
-  const m=BKS[bIdx]||{n:bible[bIdx].abbrev};
   const vt=bible[bIdx].chapters[cIdx][vi];
-  const isNT=bIdx>=39,ref=`${m.n} ${cIdx+1}:${vi+1}`;
-  setPC('lex',`<div class="loading-msg"><div class="dots"><span></span><span></span><span></span></div>Analizando "${xH(word)}" en ${ref}…</div>`);
-  if(!apiKey){setPC('lex',`<div style="padding:18px"><div class="api-warn">⚠ Configura tu API key de Claude para el análisis morfológico hebreo/griego.</div><button class="btn" onclick="openAM()">Configurar API key</button></div>`);return}
+  const isNT=bIdx>=39,ref=`${bookName(bIdx)} ${cIdx+1}:${vi+1}`;
+  const head=`<div class="st-num" style="margin-bottom:10px">“${xH(word)}” · ${xH(ref)}</div>`;
+  if(!apiKey){
+    setPC('lex',head+`<div class="api-warn">⚠ La identificación de la palabra original necesita tu API key de Claude.</div>`
+      +`<button class="btn" onclick="openAM()">Configurar API key</button>`
+      +`<div class="src-note">Mientras tanto, la pestaña <strong>Strong</strong> funciona sin clave: tiene el diccionario hebreo y griego completo, buscable por número o por significado.</div>`);
+    return;
+  }
+  setPC('lex',head+`<div class="loading-msg"><div class="dots"><span></span><span></span><span></span></div>Identificando el original de “${xH(word)}”…</div>`);
   try{
-    const sys=`Eres un experto en hebreo bíblico (AT) y griego koiné (NT), morfología, léxico ampliado y hermenéutica. Respondes en español.`;
-    const prompt=`Analiza la palabra "${word}" en ${ref} (RVR1960):\n"${vt}"\n\nIdioma original: ${isNT?'griego koiné':'hebreo bíblico'}.\n\nResponde con este formato markdown:\n\n## [palabra en original]\n*[transliteración]* | Strong: [H/G+número]\n\n### Morfología\n| Categoría | Análisis |\n|-----------|----------|\n| Tipo | ... |\n| Raíz | ... |\n${isNT?'| Caso | ... |\n| Número | ... |\n| Género | ... |':'| Género | ... |\n| Número | ... |\n| Binyan (si verbo) | ... |'}\n\n### Léxico Ampliado\n[Definición, rango semántico, matices]\n\n### En Este Versículo\n[Aporte teológico específico]\n\n### Ocurrencias Clave\n[3 usos importantes en la Biblia]`;
-    const txt=await claude(prompt,sys,2000);
-    setPC('lex',`<div class="ai-out">${md(txt)}</div>`);
-  }catch(err){setPC('lex',`<div style="padding:18px;color:var(--t3);font-family:sans-serif">Error: ${xH(err.message)}</div>`)}
+    const sys=`Eres un experto en hebreo bíblico y griego koiné. Respondes en español, con rigor exegético y tono pastoral.`;
+    const prompt=`En ${ref} (RVR1960): "${vt}"\n\nLa palabra castellana a analizar es "${word}". El idioma original es ${isNT?'griego koiné':'hebreo bíblico'}.\n\nRespondé EXACTAMENTE en este formato. La primera línea debe ser solo el número de Strong de la palabra original que está detrás de "${word}", sin nada más:\n\nSTRONG: ${isNT?'G':'H'}0000\n\n### Morfología\n| Categoría | Análisis |\n|---|---|\n| Tipo | ... |\n| Raíz | ... |\n${isNT?'| Caso | ... |\n| Número | ... |\n| Género | ... |':'| Género | ... |\n| Número | ... |\n| Binyan (si es verbo) | ... |'}\n\n### En este versículo\n[2 párrafos sobre el aporte teológico de esta palabra aquí]\n\n### Ocurrencias clave\n[3 usos importantes en la Biblia, con su referencia]\n\nSi la palabra castellana no corresponde a ninguna palabra del original (por ejemplo, un artículo añadido por los traductores), poné STRONG: NINGUNO y explicá brevemente por qué.`;
+    const txt=await claude(prompt,sys,1800);
+
+    const m=txt.match(/STRONG:\s*([HG]\s*0*\d+)/i);
+    const body=txt.replace(/^\s*STRONG:.*$/im,'').trim();
+    let card='';
+    if(m){
+      try{
+        const entry=await strongEntry(m[1]);
+        if(entry){
+          card=stCard(entry,`<div style="margin-top:10px"><button class="btn2" style="margin:0" onclick="showStrong('${entry.code}')">Ver en el léxico →</button></div>`);
+        }
+      }catch(_){/* si el diccionario no carga, seguimos con la exposición de la IA */}
+    }
+    if(!card){
+      card=`<div class="src-note" style="margin-top:0;border-top:none;padding-top:0">No se pudo anclar esta palabra a una entrada del léxico Strong; abajo va solo la lectura de la IA.</div>`;
+    }
+    setPC('lex',head+card
+      +`<div class="ia-block"><div class="xr-hdr"><span class="xr-count">Exposición</span><span class="badge badge-ia">generado por IA</span></div><div class="ai-out">${md(body)}</div></div>`
+      +SRC_STRONG);
+  }catch(err){
+    setPC('lex',head+`<div style="padding:18px;color:var(--t3);font-family:sans-serif">Error: ${xH(err.message)}</div>`);
+  }
 }
 
 function onVN(vi){doRef(vi)}
 
+// Híbrido: las referencias salen del dataset abierto (instantáneas, sin clave).
+// La IA queda detrás de un botón, solo para la síntesis teológica.
+let refCtx=null;
+
 async function doRef(vi){
   showRP();swTab('ref');
-  const m=BKS[bIdx]||{n:bible[bIdx].abbrev};
-  const vt=bible[bIdx].chapters[cIdx][vi],ref=`${m.n} ${cIdx+1}:${vi+1}`;
+  const ref=`${bookName(bIdx)} ${cIdx+1}:${vi+1}`;
+  const vt=bible[bIdx].chapters[cIdx][vi];
+  refCtx={ref,vt,vi};
   document.querySelectorAll('.verse').forEach(el=>el.classList.remove('vhl'));
   const vel=document.getElementById('vs'+vi);
   if(vel){vel.classList.add('vhl');setTimeout(()=>vel.classList.remove('vhl'),2200)}
-  setPC('ref',`<div class="loading-msg"><div class="dots"><span></span><span></span><span></span></div>Buscando referencias para ${ref}…</div>`);
-  if(!apiKey){setPC('ref',`<div style="padding:18px"><div class="api-warn">⚠ Configura tu API key para ver referencias cruzadas.</div><button class="btn" onclick="openAM()">Configurar API key</button></div>`);return}
+  const head=`<div class="vref-card" style="cursor:default"><div class="vref-ref">${xH(ref)}</div><div class="vref-txt">"${xH(vt)}"</div></div>`;
+  setPC('ref',head+`<div class="loading-msg"><div class="dots"><span></span><span></span><span></span></div>Cargando referencias…</div>`);
   try{
-    const sys=`Eres un teólogo bíblico experto en tipología y conexiones AT-NT. Respondes en español.`;
-    const prompt=`Para ${ref} (RVR1960): "${vt}"\n\nDa las 6 referencias cruzadas más significativas. Para cada una:\n\n### [Libro Cap:Vers]\n"[texto RVR1960]"\n*Conexión teológica:* [2-3 oraciones]\n\nAl final:\n## Síntesis\n[Párrafo hermenéutico integrador]`;
-    const txt=await claude(prompt,sys,2000);
-    setPC('ref',`<div><div class="vref-card" style="cursor:default"><div class="vref-ref">${ref}</div><div class="vref-txt">"${xH(vt)}"</div></div><div class="ai-out">${md(txt)}</div></div>`);
-  }catch(err){setPC('ref',`<div style="padding:18px;color:var(--t3);font-family:sans-serif">${xH(err.message)}</div>`)}
+    const xr=await getData('xrefs');
+    const raw=xr[`${bIdx}.${cIdx+1}.${vi+1}`];
+    if(!raw){
+      setPC('ref',head+`<div class="placeholder"><div class="placeholder-ico">∅</div><div>Este versículo no tiene referencias cruzadas en el dataset.</div></div>`
+        +`<div style="text-align:center"><button class="btn" onclick="refIA()">Pedir referencias a la IA</button></div>`+SRC_XREF);
+      return;
+    }
+    const cards=raw.split('|').map(s=>xrefCard(parseXref(s))).filter(Boolean);
+    setPC('ref',head
+      +`<div class="xr-hdr"><span class="xr-count">${cards.length} referencia${cards.length!==1?'s':''}</span><span class="badge badge-real">dato real</span></div>`
+      +cards.join('')
+      +`<div style="text-align:center;margin-top:14px"><button class="btn" onclick="refIA()">✨ Síntesis teológica con IA</button></div>`
+      +`<div id="ref-ia"></div>`+SRC_XREF);
+  }catch(err){
+    setPC('ref',head+`<div style="padding:18px;color:var(--t3);font-family:sans-serif">${xH(err.message)}</div>`);
+  }
+}
+
+// Capa IA: explica y conecta las referencias que ya mostramos como dato duro.
+async function refIA(){
+  if(!refCtx)return;
+  const box=document.getElementById('ref-ia')||document.getElementById('pc-ref');
+  if(!apiKey){box.innerHTML=`<div class="ia-block"><div class="api-warn">⚠ Configurá tu API key para la síntesis teológica. Las referencias de arriba funcionan sin clave.</div><button class="btn" onclick="openAM()">Configurar API key</button></div>`;return}
+  box.innerHTML=`<div class="ia-block"><div class="loading-msg"><div class="dots"><span></span><span></span><span></span></div>Sintetizando…</div></div>`;
+  try{
+    const sys=`Eres un teólogo bíblico experto en tipología y conexiones AT-NT. Respondes en español, con tono pastoral y rigor exegético.`;
+    const prompt=`Versículo base — ${refCtx.ref} (RVR1960): "${refCtx.vt}"\n\nEl lector ya tiene delante las referencias cruzadas clásicas de este versículo. No las repitas en lista. Explicá:\n\n## Hilo teológico\n[2 párrafos: qué une a este versículo con sus paralelos bíblicos]\n\n## Para la predicación\n[1 párrafo: cómo aprovechar estas conexiones al exponer el texto]`;
+    const txt=await claude(prompt,sys,1400);
+    box.innerHTML=`<div class="ia-block"><div class="xr-hdr"><span class="xr-count">Síntesis</span><span class="badge badge-ia">generado por IA</span></div><div class="ai-out">${md(txt)}</div></div>`;
+  }catch(err){box.innerHTML=`<div class="ia-block" style="color:var(--t3);font-family:sans-serif;font-size:.83rem">${xH(err.message)}</div>`}
 }
 
 async function doCom(vi){
@@ -398,7 +539,10 @@ async function doCom(vi){
     const sys=`Eres un experto en historia de la exégesis: Calvino (Institutio, Commentarii), Matthew Henry (Commentary, 1710) y Spurgeon (Treasury of David, Metropolitan Tabernacle Pulpit). Reproduces con fidelidad su estilo. Escribes en español pastoral.`;
     const prompt=`Comenta ${ref} (RVR1960): "${vt}"\n\n## Calvino\n[3 párrafos: exégesis rigurosa, soberanía de Dios, perspectiva del pacto]\n\n## Matthew Henry\n[3 párrafos: observaciones prácticas, aplicaciones devocionales, tono amable]\n\n## Spurgeon\n[3 párrafos: fervor evangelístico, ilustraciones vívidas, devoción cristocéntrica]\n\n## Síntesis Integradora\n[1-2 párrafos: cómo se complementan los tres]`;
     const txt=await claude(prompt,sys,1200);
-    setPC('com',`<div><div class="vref-card" style="cursor:default"><div class="vref-ref">${ref}</div><div class="vref-txt">"${xH(vt)}"</div></div><div class="ai-out">${md(txt)}</div></div>`);
+    setPC('com',`<div><div class="vref-card" style="cursor:default"><div class="vref-ref">${ref}</div><div class="vref-txt">"${xH(vt)}"</div></div>`
+      +`<div class="xr-hdr"><span class="xr-count">Calvino · Henry · Spurgeon</span><span class="badge badge-ia">generado por IA</span></div>`
+      +`<div class="ai-out">${md(txt)}</div>`
+      +`<div class="src-note">Síntesis en el estilo de cada autor, redactada por IA. No es transcripción literal de sus obras.</div></div>`);
   }catch(err){setPC('com',`<div style="padding:18px;color:var(--t3);font-family:sans-serif">${xH(err.message)}</div>`)}
 }
 
@@ -423,10 +567,128 @@ async function claude(user,system,maxTok=2048){
   return d.content[0].text;
 }
 
+/* ─────────── Buscador del léxico Strong (instantáneo, sin API key) ───────────
+   El léxico de Strong está en inglés. Sin este puente, buscar "amor" devolvía
+   "Amorite" y "chămôrâh" (un montón de piedras) en vez de "love": el usuario
+   escribe en castellano y el dato está en otro idioma. Cubre el vocabulario
+   teológico que se busca de verdad al preparar un sermón. */
+const ES_EN={
+  amor:'love',amar:'love',amado:'beloved',pacto:'covenant',alianza:'covenant',gracia:'grace',
+  fe:'faith',fiel:'faithful',fidelidad:'faithfulness',justicia:'righteousness',justo:'righteous',
+  justificar:'justify',santo:'holy',santidad:'holiness',santificar:'sanctify',pecado:'sin',
+  pecador:'sinner',iniquidad:'iniquity',transgresion:'transgression',perdon:'forgiveness',
+  perdonar:'forgive',redencion:'redemption',redimir:'redeem',salvacion:'salvation',salvar:'save',
+  salvador:'saviour',expiacion:'atonement',sacrificio:'sacrifice',ofrenda:'offering',
+  altar:'altar',sacerdote:'priest',profeta:'prophet',rey:'king',reino:'kingdom',siervo:'servant',
+  esclavo:'servant',señor:'lord',dios:'god',espiritu:'spirit',alma:'soul',carne:'flesh',
+  corazon:'heart',mente:'mind',sabiduria:'wisdom',sabio:'wise',entendimiento:'understanding',
+  conocimiento:'knowledge',verdad:'truth',mentira:'lie',palabra:'word',ley:'law',mandamiento:'commandment',
+  estatuto:'statute',juicio:'judgment',juzgar:'judge',ira:'wrath',enojo:'anger',misericordia:'mercy',
+  compasion:'compassion',bondad:'kindness',benignidad:'kindness',paz:'peace',gozo:'joy',alegria:'joy',
+  esperanza:'hope',temor:'fear',temer:'fear',orar:'pray',oracion:'prayer',alabar:'praise',
+  alabanza:'praise',adorar:'worship',bendecir:'bless',bendicion:'blessing',maldicion:'curse',
+  gloria:'glory',honra:'honour',poder:'power',fuerza:'strength',luz:'light',tinieblas:'darkness',
+  vida:'life',vivir:'live',muerte:'death',morir:'die',resurreccion:'resurrection',eterno:'everlasting',
+  cielo:'heaven',tierra:'earth',mundo:'world',templo:'temple',casa:'house',pueblo:'people',
+  nacion:'nation',gentil:'gentile',israel:'israel',pastor:'shepherd',oveja:'sheep',cordero:'lamb',
+  sangre:'blood',agua:'water',fuego:'fire',pan:'bread',vino:'wine',aceite:'oil',
+  arrepentimiento:'repentance',arrepentirse:'repent',convertir:'turn',creer:'believe',
+  obedecer:'obey',obediencia:'obedience',pactar:'covenant',herencia:'inheritance',
+  promesa:'promise',juramento:'oath',testigo:'witness',testimonio:'testimony',
+  gracia_divina:'grace',consolar:'comfort',consolacion:'comfort',paciencia:'patience',
+  humildad:'humility',humilde:'humble',orgullo:'pride',soberbia:'pride',
+  angel:'angel',demonio:'devil',satanas:'satan',tentacion:'temptation',prueba:'trial',
+  llamar:'call',elegir:'choose',escogido:'chosen',eleccion:'election',
+  gemir:'groan',llorar:'weep',clamar:'cry',escuchar:'hear',ver:'see',caminar:'walk',
+  camino:'way',verdadero:'true',nuevo:'new',viejo:'old',primero:'first',ultimo:'last',
+  hijo:'son',hija:'daughter',padre:'father',madre:'mother',hermano:'brother',
+  esposa:'wife',esposo:'husband',novia:'bride',matrimonio:'marriage',
+  iglesia:'church',asamblea:'assembly',congregacion:'congregation',discipulo:'disciple',
+  apostol:'apostle',evangelio:'gospel',predicar:'preach',enseñar:'teach',doctrina:'doctrine',
+  mesias:'messiah',cristo:'christ',ungido:'anointed',ungir:'anoint',jesus:'jesus'
+};
+
+function debounceStrong(q){clearTimeout(stTimer);stTimer=setTimeout(()=>doStrong(q),240)}
+function stOut(h){document.getElementById('st-out').innerHTML=h}
+
+async function doStrong(q){
+  q=q.trim();
+  if(!q){stOut(`<div class="placeholder"><div class="placeholder-ico">🔎</div><div>Buscá por <strong>número de Strong</strong> (H430, G26) o por la palabra original (אלהים, ἀγάπη).</div></div>`);return}
+  stOut(`<div class="loading-msg"><div class="dots"><span></span><span></span><span></span></div>Buscando…</div>`);
+  try{
+    const code=normStrong(q);
+    if(code&&/^[HhGg]\s*0*\d+$/.test(q.replace(/\s/g,''))){
+      const e=await strongEntry(code);
+      stOut(e?stCard(e)+SRC_STRONG:`<div class="placeholder"><div class="placeholder-ico">∅</div><div>No existe la entrada <strong>${xH(code)}</strong>.</div></div>`);
+      return;
+    }
+    const [h,g]=await Promise.all([getData('strong-h'),getData('strong-g')]);
+    let qn=norm(q);const qo=normOrig(q),res=[];
+    let nota='';
+    if(ES_EN[qn]){
+      nota=`<div class="src-note" style="margin-top:0;border-top:none;padding-top:0;margin-bottom:10px">Buscando <strong>${xH(ES_EN[qn])}</strong> — el léxico de Strong está en inglés.</div>`;
+      qn=ES_EN[qn];
+    }
+    // Ranking: primero lema/transliteración, después la definición. Solo se
+    // acepta coincidencia que arranque en límite de palabra — el substring
+    // suelto hacía que "love" cayera detrás de ruido y llenaba de falsos
+    // positivos cualquier búsqueda en castellano.
+    const wordRe=new RegExp('\\b'+qn.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'));
+    for(const dict of [h,g]){
+      for(const k in dict){
+        const e=dict[k],lo=e.l?normOrig(e.l):'',xl=e.x?norm(e.x):'',d=e.d?norm(e.d):'',kj=e.k?norm(e.k):'';
+        let s=0;
+        if((lo&&lo===qo)||xl===qn)s=5;
+        else if((lo&&lo.includes(qo))||xl.includes(qn))s=4;
+        else if(wordRe.test(kj))s=3;
+        else if(wordRe.test(d))s=2;
+        if(s)res.push({s,e:{code:k,...e}});
+      }
+    }
+    if(!res.length){stOut(`<div class="placeholder"><div class="placeholder-ico">∅</div><div>Sin resultados para <strong>${xH(q)}</strong>.<br><br>El léxico de Strong está <strong>en inglés</strong>: probá con el término inglés (<em>love</em>, <em>covenant</em>) o directamente con el número (H430, G26).</div></div>`);return}
+    res.sort((a,b)=>b.s-a.s);
+    const shown=res.slice(0,25);
+    stOut(`<div class="xr-hdr"><span class="xr-count">${res.length>25?`25 de ${res.length}`:`${res.length}`} resultado${res.length!==1?'s':''}</span><span class="badge badge-real">dato real</span></div>`
+      +nota+shown.map(r=>stCard(r.e)).join('')+SRC_STRONG);
+  }catch(err){
+    stOut(`<div style="padding:18px;color:var(--t3);font-family:sans-serif">${xH(err.message)}</div>`);
+  }
+}
+
+function showStrong(code){
+  swTab('str');
+  const inp=document.getElementById('st-inp');
+  inp.value=code;doStrong(code);
+}
+
+/* ─────────── Referencias cruzadas reales ─────────── */
+function bookName(b){return BKS[b]?.n||bible[b]?.abbrev||'Libro '+(b+1)}
+function verseText(b,c,v){return bible?.[b]?.chapters?.[c-1]?.[v-1]??null}
+
+// "18.33.6" o "50.1.16.17" (rango) → {b,c,v,e}
+function parseXref(s){
+  const p=s.split('.').map(Number);
+  return{b:p[0],c:p[1],v:p[2],e:p.length>3?p[3]:null};
+}
+function xrefCard(r){
+  const parts=[];
+  const last=r.e||r.v;
+  for(let v=r.v;v<=last;v++){const t=verseText(r.b,r.c,v);if(t)parts.push(t)}
+  if(!parts.length)return'';
+  const label=bookName(r.b)+' '+r.c+':'+r.v+(r.e?'-'+r.e:'');
+  return`<div class="xr" onclick="goTo(${r.b},${r.c-1});closeSM();hlVerse(${r.v-1})">
+    <div class="xr-ref">${xH(label)}</div>
+    <div class="xr-txt">${xH(parts.join(' '))}</div>
+  </div>`;
+}
+
 function openSM(){document.getElementById('sm').classList.add('open');setTimeout(()=>document.getElementById('sm-inp').focus(),40)}
 function closeSM(){document.getElementById('sm').classList.remove('open');document.getElementById('sm-inp').value='';document.getElementById('sm-res').innerHTML='';document.getElementById('sm-stat').textContent=''}
 function debounceSrch(q){clearTimeout(srchTimer);if(q.length<2){document.getElementById('sm-res').innerHTML='';document.getElementById('sm-stat').textContent='';return}srchTimer=setTimeout(()=>doSrch(q),280)}
 function norm(s){return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
+// Para hebreo y griego: saca vocales (niqqud), cantilaci\u00f3n y acentos, as\u00ed
+// buscar "\u05d0\u05dc\u05d4\u05d9\u05dd" encuentra "\u05d0\u05b1\u05dc\u05b9\u05d4\u05b4\u05d9\u05dd" y "\u03b1\u03b3\u03b1\u03c0\u03b7" encuentra "\u1f00\u03b3\u03ac\u03c0\u03b7".
+function normOrig(s){return s.normalize('NFD').replace(/[\u0300-\u036f\u0591-\u05c7]/g,'').toLowerCase()}
 function doSrch(q){
   if(!bible)return;const qn=norm(q);const res=[];
   outer:for(let b=0;b<bible.length;b++){const bn=BKS[b]?.n||bible[b].abbrev;
@@ -459,7 +721,7 @@ function md(raw){
   flushP();flushL();flushT();return out.join('\n');
 }
 
-function swTab(t){['lex','ref','com'].forEach(x=>{document.getElementById('pt-'+x).classList.toggle('on',x===t);document.getElementById('pc-'+x).classList.toggle('on',x===t)})}
+function swTab(t){['lex','str','ref','com'].forEach(x=>{document.getElementById('pt-'+x).classList.toggle('on',x===t);document.getElementById('pc-'+x).classList.toggle('on',x===t)})}
 function setPC(t,html){document.getElementById('pc-'+t).innerHTML=html}
 function showRP(){document.getElementById('rp').classList.remove('closed');document.getElementById('rp-btn').classList.add('on')}
 function togRP(){const rp=document.getElementById('rp');const open=!rp.classList.contains('closed');rp.classList.toggle('closed',open);document.getElementById('rp-btn').classList.toggle('on',!open)}
